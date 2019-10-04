@@ -1,0 +1,9 @@
+D:\GitKraken\Repos\ISOCS\ISOCS\DataModels\bin\Debug\netstandard2.0\DataModels.deps.json
+D:\GitKraken\Repos\ISOCS\ISOCS\DataModels\bin\Debug\netstandard2.0\DataModels.dll
+D:\GitKraken\Repos\ISOCS\ISOCS\DataModels\bin\Debug\netstandard2.0\DataModels.pdb
+D:\GitKraken\Repos\ISOCS\ISOCS\DataModels\obj\Debug\netstandard2.0\DataModels.csprojAssemblyReference.cache
+D:\GitKraken\Repos\ISOCS\ISOCS\DataModels\obj\Debug\netstandard2.0\DataModels.csproj.CoreCompileInputs.cache
+D:\GitKraken\Repos\ISOCS\ISOCS\DataModels\obj\Debug\netstandard2.0\DataModels.AssemblyInfoInputs.cache
+D:\GitKraken\Repos\ISOCS\ISOCS\DataModels\obj\Debug\netstandard2.0\DataModels.AssemblyInfo.cs
+D:\GitKraken\Repos\ISOCS\ISOCS\DataModels\obj\Debug\netstandard2.0\DataModels.dll
+D:\GitKraken\Repos\ISOCS\ISOCS\DataModels\obj\Debug\netstandard2.0\DataModels.pdb

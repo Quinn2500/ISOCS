@@ -1,0 +1,46 @@
+﻿@{
+    Layout = "";
+}
+@model LoginModel
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>ISOCS</title>
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/css/site.css")" />
+</head>
+<body>
+    <div id="MainLogo">
+        <h3>@ViewData["Titel"]</h3>
+    </div>
+
+    @using (Html.BeginForm())
+    {
+        <div>
+            <div>
+                @Html.LabelFor(x => x.email)
+                @Html.TextBoxFor(x => x.email)
+                @Html.ValidationMessageFor(x => x.email, "", new { @style = "color: red;" })
+            </div>
+            <div>
+                @Html.LabelFor(x => x.password)
+                @Html.PasswordFor(x => x.password)
+                @Html.ValidationMessageFor(x => x.password)
+            </div>
+            <div>
+                <input type="submit" value="Login" />
+            </div>
+        </div>
+    }
+    <div>
+        <a asp-area="" asp-controller="Home" asp-action="Register">Klik hier als je nog geen account hebt!</a>
+    </div>
+    @if (ViewData["Message"] != null)
+    {
+        <div>
+            <p>Bericht: @ViewData["Message"] </p>
+        </div>
+    }
+
+</body>
+</html>
