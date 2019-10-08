@@ -60,7 +60,7 @@ using ISOCS.Models;
             WriteLiteral("\r\n<!DOCTYPE html>\r\n<html lang=\"en\">\r\n");
             EndContext();
             BeginContext(84, 126, false);
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("head", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "e64f45b802834baa8000e6fd3f744708", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("head", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "d11b6d22017d420d85a60ec73e0cd0bb", async() => {
                 BeginContext(90, 70, true);
                 WriteLiteral("\r\n    <title>ISOCS</title>\r\n    <link rel=\"stylesheet\" type=\"text/css\"");
                 EndContext();
@@ -90,7 +90,7 @@ WriteAttributeValue("", 167, Url.Content("~/css/site.css"), 167, 30, false);
             WriteLiteral("\r\n");
             EndContext();
             BeginContext(212, 1300, false);
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("body", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "d3e7afeb124d47b3913c5ec2b2bf408c", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("body", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "e7a878b04a69427fa80c0081dcea57d5", async() => {
                 BeginContext(218, 51, true);
                 WriteLiteral("\r\n<div id=\"MainLogo\">\r\n    <h3>ISOCS</h3>\r\n</div>\r\n");
                 EndContext();

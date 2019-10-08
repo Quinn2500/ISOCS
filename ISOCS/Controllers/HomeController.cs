@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -7,6 +8,7 @@ using Business;
 using DataModels;
 using Microsoft.AspNetCore.Mvc;
 using ISOCS.Models;
+using Org.BouncyCastle.Crypto.Tls;
 
 namespace ISOCS.Controllers
 {
@@ -16,6 +18,18 @@ namespace ISOCS.Controllers
 
         public IActionResult Index(LoginModel model)
         {
+            CertificateModel cer = new CertificateModel
+            {
+                Name = "test"
+            };
+            CertificateModel cer1 = new CertificateModel
+            {
+                Name = "test1"
+            };
+            List<CertificateModel> list = new List<CertificateModel>();
+            list.Add(cer);
+            list.Add(cer1);
+            ViewBag.Certificates = list;
             if (!ModelState.IsValid)
             {
                 return View(model);

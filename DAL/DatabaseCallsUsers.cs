@@ -31,11 +31,10 @@ namespace DAL
             DataTable dbuser = dbCalls.Select(command, parameters);
             UserModel user = new UserModel
             {
-                ID = Convert.ToInt32(dbuser.Rows[0][0]),
-                Email = dbuser.Rows[0][1].ToString(),
-                Firstname = dbuser.Rows[0][2].ToString(),
-                Lastname = dbuser.Rows[0][3].ToString(),
-                Preposition = dbuser.Rows[0][4].ToString()
+                Email = dbuser.Rows[0][0].ToString(),
+                Firstname = dbuser.Rows[0][1].ToString(),
+                Lastname = dbuser.Rows[0][2].ToString(),
+                Preposition = dbuser.Rows[0][3].ToString()
             };
 
             return user;
