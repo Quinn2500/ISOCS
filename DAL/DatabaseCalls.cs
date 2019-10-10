@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.Data;
 using MySql.Data.MySqlClient;
@@ -7,7 +8,6 @@ namespace DAL
 {
     class DatabaseCalls
     {
-        private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
         private MySqlConnection _msConn = new MySqlConnection("Server=localhost; database=isocsdb; UID=root; password=; Sslmode=none;");
 
@@ -19,7 +19,6 @@ namespace DAL
             }
             catch (Exception ex)
             {
-                logger.Error(ex);
                 return false;
             }
             finally

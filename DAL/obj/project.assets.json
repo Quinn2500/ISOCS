@@ -1009,16 +1009,6 @@
         "runtime": {
           "lib/netstandard1.3/System.Xml.XPath.XmlDocument.dll": {}
         }
-      },
-      "DataModels/1.0.0": {
-        "type": "project",
-        "framework": ".NETStandard,Version=v2.0",
-        "compile": {
-          "bin/placeholder/DataModels.dll": {}
-        },
-        "runtime": {
-          "bin/placeholder/DataModels.dll": {}
-        }
       }
     }
   },
@@ -4216,16 +4206,10 @@
         "system.xml.xpath.xmldocument.4.0.1.nupkg.sha512",
         "system.xml.xpath.xmldocument.nuspec"
       ]
-    },
-    "DataModels/1.0.0": {
-      "type": "project",
-      "path": "../DataModels/DataModels.csproj",
-      "msbuildProject": "../DataModels/DataModels.csproj"
     }
   },
   "projectFileDependencyGroups": {
     ".NETStandard,Version=v2.0": [
-      "DataModels >= 1.0.0",
       "MySql.Data >= 8.0.17",
       "NETStandard.Library >= 2.0.3",
       "NLog >= 4.6.7"
@@ -4260,11 +4244,7 @@
       },
       "frameworks": {
         "netstandard2.0": {
-          "projectReferences": {
-            "D:\\GitKraken\\Repos\\ISOCS\\DataModels\\DataModels.csproj": {
-              "projectPath": "D:\\GitKraken\\Repos\\ISOCS\\DataModels\\DataModels.csproj"
-            }
-          }
+          "projectReferences": {}
         }
       },
       "warningProperties": {

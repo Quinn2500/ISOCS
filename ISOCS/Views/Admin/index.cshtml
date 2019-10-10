@@ -1,0 +1,204 @@
+﻿@using DataModels
+@using ISOCS.Controllers
+@inject UserManager<ApplicationUser> UserManager
+
+@{
+    ViewData["Title"] = "index";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>_Layout</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <link href="~/css/bootstrap.css" rel="stylesheet" />
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js" integrity="sha384-xrRywqdh3PHs8keKZN+8zzc5TX0GRTLCcmivcbNJWm2rs5C8PRhcEn3czEjhAO9o" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light row">
+        <div class="col" align="left">
+            <button type="button" class="btn btn-primary" asp-area="" asp-controller="Home" asp-action="Index">Home</button>
+        </div>
+        <div class="col" align="center">
+            <h1>ISOCS</h1>
+        </div>
+        <div class="col" align="right">
+            <button type="button" class="btn btn-danger" asp-area="" asp-controller="Account" asp-action="Logout">Uitloggen</button>
+        </div>
+    </nav>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col" align="center" style="background-color: lightgray; margin-top: 40px; padding: 10px; border-radius: 10px;">
+            <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Zoek gebruikers">
+            <table id="myTable" class="table table-hover">
+                <thead>
+                <tr>
+                    <th scope="col">Email</th>
+                    <th scope="col">Voornaam</th>
+                    <th scope="col">Tussenvoegsel</th>
+                    <th scope="col">Achternaam</th>
+                    <th scope="col">Admin</th>
+                    <th scope="col">Manager</th>
+                    <th scope="col">Employee</th>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach (ApplicationUser user in ViewBag.UsersFromCompany)
+                {
+                    string role = UserManager.GetRolesAsync(user).Result[0].ToLower();
+                    <tr class="table table-bordered table-info">
+                        <td>@user.Email</td>
+                        <td>@user.Firstname</td>
+                        <td>@user.Preposition</td>
+                        <td>@user.Lastname</td>
+                        <td>
+                            <div class="radio">
+                                <label><input type="radio" id='admin' name="@user.Email" checked="@(role.Equals("admin"))">Admin</label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="radio">
+                                <label><input type="radio" id='manager' name="@user.Email" checked="@role.Equals("manager"))">Manager</label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="radio">
+                                <label><input type="radio" id='employee' name="@user.Email" checked="@(role.Equals("employee"))">Employee</label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="">
+                                <button type="button" class="btn btn-success">Delete Gebruiker</button>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="">
+                                <button type="button" class="btn btn-success">Pas gebruiker aan</button>
+                            </div>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+        <!-- Button trigger modal -->
+        <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#modelInviteUser">Open Modal</button>
+
+        <!-- Modal -->
+        <div class="modal fade" id="modelInviteUser" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header text-center">
+                        <h4 class="modal-title w-100 font-weight-bold">Voer emailadres in:</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="md-form mb-5">
+                            <div id="reqs">
+                                <h3>Gebruikers om uitenodigen</h3>
+                                <button type="button" value="Add" onclick="javascript:add();">Add</button>
+                                <br>
+                            </div>
+                        </div>
+                        <button>Nodig Uit!</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+
+
+
+</body>
+</html>
+
+<script>
+
+    function removeElement(e) {
+        let button = e.target;
+        let field = button.previousSibling;
+        let div = button.parentElement;
+        let br = button.nextSibling;
+        div.removeChild(button);
+        div.removeChild(field);
+        div.removeChild(br);
+    
+        let allElements = document.getElementById("reqs");
+        let inputs = allElements.getElementsByTagName("input");
+        for(i=0;i<inputs.length;i++){
+            inputs[i].setAttribute('id', 'reqs' + (i+1));
+            inputs[i].setAttribute('value', (i+1));
+            inputs[i].nextSibling.setAttribute('id', 'reqsr' + (i+1));
+        }
+    }
+  
+    function add() {
+        let allElements = document.getElementById("reqs");
+        let reqs_id = allElements.getElementsByTagName("input").length;
+    
+        reqs_id++;
+    
+        //create textbox
+        let input = document.createElement('input');
+        input.type = "text";
+        input.setAttribute("class", "w3-input w3-border");
+        input.setAttribute('id', 'reqs' + reqs_id);
+        input.setAttribute('value', reqs_id);
+        let reqs = document.getElementById("reqs");
+    
+        //create remove button
+        let remove = document.createElement('button');
+        remove.setAttribute('id', 'reqsr' + reqs_id);
+        remove.onclick = function(e) {
+            removeElement(e);
+        };
+        remove.setAttribute("type", "button");
+        remove.innerHTML = "Remove";
+    
+        //append elements
+        reqs.appendChild(input);
+        reqs.appendChild(remove);
+        let br = document.createElement("br");
+        reqs.appendChild(br);
+    }
+
+    //ZoekFunctie
+       function myFunction() {
+            var input, filter, table, tr, td, i, txtValue;
+            input = document.getElementById("myInput");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("myTable");
+            tr = table.getElementsByTagName("tr");
+
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[0];
+                if (td) {
+                    txtValue = td.textContent || td.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+</script>
+
+

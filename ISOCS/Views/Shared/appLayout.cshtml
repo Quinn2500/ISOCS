@@ -1,0 +1,49 @@
+﻿@using DataModels;
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>_Layout</title>
+    <link href="~/css/bootstrap.css" rel="stylesheet" />
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light row">
+        <div class="col" align="left">
+            <button type="button" class="btn btn-primary" asp-area="" asp-controller="Home" asp-action="Index">Home</button>
+        </div>
+        <div class="col" align="center">
+            <h1>ISOCS</h1>
+        </div>
+        <div class="col" align="right">
+            <button type="button" class="btn btn-danger" asp-area="" asp-controller="Home" asp-action="Index">Uitloggen</button>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-2" align="center" style="background-color: lightgray; margin-top: 40px; padding: 10px; border-radius: 10px;">
+                <h3>Certificaten</h3>
+                <form style ="margin: 0 auto; width: 80%; margin-bottom: 10px" class="form-inline">
+                    <input class="form-control" type="text" placeholder="Search">
+                </form>
+                @foreach (CertificateModel certificate in ViewBag.Certificates )
+                {
+                <button type="button" class="btn btn-block btn-secondary" asp-route-id="@certificate.Id" asp-area="" asp-controller="Home" asp-action="Index">@certificate.Name</button>
+                }
+            </div>
+
+            <div class="col-sm-9" style="background-color: lightgray; margin-top: 40px; margin-left: 10px; padding: 10px; border-radius: 10px;">
+                @RenderBody()
+            </div>
+        </div>
+    </div>
+
+
+</body>
+</html>

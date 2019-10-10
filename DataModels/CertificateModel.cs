@@ -10,7 +10,7 @@ namespace DataModels
         public string Name { get; set; }
         public string Description { get; set; }
         public List<ActionModel> Actions { get; set; }
-        public UserModel CreatedBy { get; set; }
+        public ApplicationUser CreatedBy { get; set; }
         public DateTime CreatedOn { get; set; }
         public CompanyModel Company { get; set; }
     }
