@@ -1,0 +1,118 @@
+﻿@model ISOCS.Models.AppViewModel.ActionViewModel
+@{
+    ViewData["Title"] = "CreateCertificate";
+    Layout = "~/Views/Shared/appLayout.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>_Layout</title>
+    <!--
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <link href="~/css/bootstrap.css" rel="stylesheet" />
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js" integrity="sha384-xrRywqdh3PHs8keKZN+8zzc5TX0GRTLCcmivcbNJWm2rs5C8PRhcEn3czEjhAO9o" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="~/lib/jquery/dist/jquery.searchabledropdown-1.0.8.min.js"></script>
+    -->
+    <script src="https://code.jquery.com/jquery-1.8.3.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
+    <link href="https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css" rel="stylesheet" type="text/css" />
+    <script src="~/lib/jquery/dist/jquery.searchabledropdown-1.0.8.min.js"></script>
+
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div>
+                    @using (Html.BeginForm())
+                    {
+                    <div class="form-horizontal">
+                        <div>
+                            <label>Titel:</label>
+                            @Html.TextBoxFor(x => x.Title)
+                            @Html.ValidationMessageFor(x => x.Title)
+                        </div>
+                        <div>
+                            <label>Beschrijving:</label>
+                            @Html.TextAreaFor(x => x.Description)
+                            @Html.ValidationMessageFor(x => x.Description)
+                        </div>
+                        <div>
+                            <label>Selecteer frequentie:</label>
+                            @Html.DropDownListFor(x => x.Occurence, (IEnumerable<SelectListItem>)ViewBag.Enums, null, new { @id = "selectEnum", @class = "form-control" })
+
+                        </div>
+
+                        <div>
+                            <label>Selecteer start datum:</label>
+                            @Html.TextBoxFor(x => x.StartDate, new {@id = "datepicker", @width = "276"})
+
+                            <script>
+                                $('#datepicker').datepicker({
+                                    uiLibrary: 'bootstrap4',
+                                    format: 'dd/mm/yyyy',
+                                    language: 'nl'
+
+                                });
+                            </script>
+                        </div>
+                        <div>
+                            <label>Verantwoordelijke:</label>
+                            @Html.DropDownListFor(x => x.ResponsibleUser, (IEnumerable<SelectListItem>)ViewBag.Users, null, new { @id = "selectUser", @class = "form-control" })
+                        </div>
+                        <div>
+                            <div>
+                                <label>Comments:</label>
+                                @Html.CheckBoxFor(x => x.EnableComments)
+                            </div>
+                            <div>
+                                <label>Notificaties:</label>
+                                @Html.CheckBoxFor(x => x.EnableNotifications)
+                            </div>
+                            <div>
+                                <label>Media Uploaden:</label>
+                                @Html.CheckBoxFor(x => x.EnableFileUpload)
+                            </div>
+                        </div>
+
+                        <input type="submit" name="name" value="Submit" />
+                    </div>
+                    }
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+</body>
+</html>
+
+    <script>
+        $(function () {
+            //normal dropdown
+            //$("#normalDropDown").chosen({
+            //    disable_search_threshold : 5
+            //});
+
+            //multiselect DropDown
+            //$("#multiSelectDropDown").chosen({
+            //    width : "100%"
+            //});
+        });
+
+        $(document).ready(function() {
+            $("select").searchable();
+        });
+
+    </script>

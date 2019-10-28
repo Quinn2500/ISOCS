@@ -5201,6 +5201,7 @@
         "type": "project",
         "framework": ".NETStandard,Version=v2.0",
         "dependencies": {
+          "DataModels": "1.0.0",
           "MySql.Data": "8.0.17",
           "NLog": "4.6.7"
         },

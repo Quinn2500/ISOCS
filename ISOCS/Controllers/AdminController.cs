@@ -4,11 +4,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using Business;
 using DataModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ISOCS.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
@@ -17,18 +19,37 @@ namespace ISOCS.Controllers
         public AdminController( UserManager<ApplicationUser> userManager)
         { _userManager = userManager;}
 
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
-            ViewBag.Roles = _userManager;
             ApplicationUser loggedInUser = await _userManager.FindByNameAsync(User.Identity.Name);
             List<ApplicationUser> result = new List<ApplicationUser>();
-            foreach (string userEmail in _adminLogic.GetAllUsersEmailAdresses(loggedInUser.CompanyName))
+            foreach (ApplicationUser user in _userManager.Users.Where(u => u.CompanyName == loggedInUser.CompanyName).ToList())
             {
-                result.Add(await _userManager.FindByEmailAsync(userEmail));
+                result.Add(user);
             }
 
             ViewBag.UsersFromCompany = result;
             return View();
         }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(string id)
+        {
+            ApplicationUser user = await _userManager.FindByEmailAsync(id);
+            if (user != null)
+            {
+                await _userManager.DeleteAsync(user);
+            }
+            return RedirectToAction(nameof(Index), "Admin");
+        }
+
+        [HttpPost]
+        public IActionResult InviteUsers(List<string> id)
+        {
+          
+            return RedirectToAction(nameof(Index), "Admin");
+        }
+
     }
 }

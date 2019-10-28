@@ -1,7 +1,11 @@
-﻿
+﻿@using DataModels
+@inject UserManager<ApplicationUser> UserManager
 @{
     ViewData["Title"] = "index";
+    Layout = "~/Views/Shared/appLayout.cshtml";
 }
 
-<h2>App pagina</h2>
+<h2>Rol: @ViewBag.userRole </h2>
+
+<a class="btn btn-success" asp-area="" asp-controller="App" asp-action="CreateAction">Voeg een taak toe</a>
 

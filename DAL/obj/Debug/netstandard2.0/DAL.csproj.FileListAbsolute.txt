@@ -7,3 +7,8 @@ D:\GitKraken\Repos\ISOCS\DAL\bin\Debug\netstandard2.0\DAL.pdb
 D:\GitKraken\Repos\ISOCS\DAL\obj\Debug\netstandard2.0\DAL.dll
 D:\GitKraken\Repos\ISOCS\DAL\obj\Debug\netstandard2.0\DAL.pdb
 D:\GitKraken\Repos\ISOCS\DAL\obj\Debug\netstandard2.0\DAL.csproj.CoreCompileInputs.cache
+D:\GitKraken\Repos\ISOCS\DAL\bin\Debug\netstandard2.0\DataModels.dll
+D:\GitKraken\Repos\ISOCS\DAL\bin\Debug\netstandard2.0\Microsoft.Extensions.Identity.Stores.dll
+D:\GitKraken\Repos\ISOCS\DAL\bin\Debug\netstandard2.0\DataModels.pdb
+D:\GitKraken\Repos\ISOCS\DAL\bin\Debug\netstandard2.0\Microsoft.Extensions.Identity.Stores.xml
+D:\GitKraken\Repos\ISOCS\DAL\obj\Debug\netstandard2.0\DAL.csproj.CopyComplete

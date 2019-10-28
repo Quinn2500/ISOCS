@@ -1,0 +1,101 @@
+﻿@using DataModels
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>_Layout</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js" integrity="sha384-xrRywqdh3PHs8keKZN+8zzc5TX0GRTLCcmivcbNJWm2rs5C8PRhcEn3czEjhAO9o" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+</head>
+
+<body>
+<div class="container">
+    <div class="row">
+        <div style="border-radius: 20px; border-style: solid; " id="daily" class="col-4">
+            <h3>Dagelijkse Taken:</h3>
+            @foreach (string action in ViewBag.Actions.TasksDaily)
+            {
+                <div style="border-radius: 10px; border-style: solid; margin-bottom: 5px;">
+                    <p>@action</p>
+                    <a href="#">
+                        <span class="fas fa-cog"></span>
+                    </a>
+                    <a href="#">
+                        <span class="fas fa-trash-alt"></span>
+                    </a>
+                </div>
+            }
+        </div>
+        <div id="weekly" class="col-4">
+            <h3>Wekelijkse Taken:</h3>
+            @foreach (string action in ViewBag.Actions.TasksWeekly)
+            {
+                <div>
+                    <p>@action</p>
+                    <a href="#">
+                        <span class="fas fa-cog"></span>
+                    </a>
+                    <a href="#">
+                        <span class="fas fa-trash-alt"></span>
+                    </a>
+                </div>
+            }
+        </div>
+        <div id="monthly" class="col-4">
+            <h3>Maandelijkse Taken:</h3>
+            @foreach (string action in ViewBag.Actions.TasksMonthly)
+            {
+                <div>
+                    <p>@action</p>
+                    <a href="#">
+                        <span class="fas fa-cog"></span>
+                    </a>
+                    <a href="#">
+                        <span class="fas fa-trash-alt"></span>
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+    <div class="row">
+        <div id="quarterly" class="col-6">
+            <h3>Kwartaallijkse Taken:</h3>
+            @foreach (string action in ViewBag.Actions.TasksQuarterly)
+            {
+                <div>
+                    <p>@action</p>
+                    <a href="#">
+                        <span class="fas fa-cog"></span>
+                    </a>
+                    <a href="#">
+                        <span class="fas fa-trash-alt"></span>
+                    </a>
+                </div>
+            }
+        </div>
+        <div id="yearly" class="col-6">
+            <h3>Jaarlijkse Taken:</h3>
+            @foreach (string action in ViewBag.Actions.TasksYearly)
+            {
+                <div>
+                    <p>@action</p>
+                    <a href="#">
+                        <span class="fas fa-cog"></span>
+                    </a>
+                    <a href="#">
+                        <span class="fas fa-trash-alt"></span>
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+
+
+</body>
+</html>

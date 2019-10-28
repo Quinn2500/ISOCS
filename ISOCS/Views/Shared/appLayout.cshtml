@@ -1,6 +1,9 @@
-﻿@using DataModels;
+﻿@using Business
+@using DataModels;
+@inject UserManager<ApplicationUser> UserManager
 @{
     Layout = null;
+    AppLogic appLogic = new AppLogic();
 }
 
 <!DOCTYPE html>
@@ -21,7 +24,7 @@
             <h1>ISOCS</h1>
         </div>
         <div class="col" align="right">
-            <button type="button" class="btn btn-danger" asp-area="" asp-controller="Home" asp-action="Index">Uitloggen</button>
+            <a class="btn btn-danger" asp-area="" asp-controller="Account" asp-action="Logout">Uitloggen</a>
         </div>
     </nav>
 
@@ -29,13 +32,14 @@
         <div class="row">
             <div class="col-sm-2" align="center" style="background-color: lightgray; margin-top: 40px; padding: 10px; border-radius: 10px;">
                 <h3>Certificaten</h3>
-                <form style ="margin: 0 auto; width: 80%; margin-bottom: 10px" class="form-inline">
+                <form style="margin: 0 auto; width: 80%; margin-bottom: 10px" class="form-inline">
                     <input class="form-control" type="text" placeholder="Search">
                 </form>
-                @foreach (CertificateModel certificate in ViewBag.Certificates )
+                @foreach (string certificate in appLogic.GetAllCertificateNamesFromCompany(UserManager.FindByNameAsync(User.Identity.Name).Result.CompanyName))
                 {
-                <button type="button" class="btn btn-block btn-secondary" asp-route-id="@certificate.Id" asp-area="" asp-controller="Home" asp-action="Index">@certificate.Name</button>
+                    <button type="button" class="btn btn-block btn-secondary" asp-route-id="@certificate" asp-area="" asp-controller="App" asp-action="Index">@certificate</button>
                 }
+                <a class="btn btn-block btn-success" asp-route-id="" asp-area="" asp-controller="App" asp-action="CreateCertificate">+</a>
             </div>
 
             <div class="col-sm-9" style="background-color: lightgray; margin-top: 40px; margin-left: 10px; padding: 10px; border-radius: 10px;">

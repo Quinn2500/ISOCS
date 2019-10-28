@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System;
+using Microsoft.AspNetCore.Identity;
 
 namespace DataModels
 {
@@ -9,5 +10,13 @@ namespace DataModels
         public string Lastname { get; set; }
         public string Preposition { get; set; }
         public string CompanyName { get; set; }
+
+        public string FullName
+        {
+            get
+            {
+                return string.Format("{0} {1}, {2}", Lastname, Firstname, Preposition);
+            }
+        }
     }
 }
