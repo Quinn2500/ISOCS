@@ -13,6 +13,7 @@ namespace ISOCS.Models.AppViewModel
         public string Description { get; set; }
         public DateTime StartDate { get; set; }
         public OccurenceEnum Occurence { get; set; }
+        public string CertificateName { get; set; }
         public string ResponsibleUser { get; set; }
         public bool EnableComments { get; set; }
         public bool EnableFileUpload { get; set; }

@@ -9,12 +9,12 @@ namespace Business
 {
     public class AppLogic
     {
-        DataBaseCallsApp dataBaseCallsApp = new DataBaseCallsApp();
+        readonly DataBaseCallsApp _dataBaseCallsApp = new DataBaseCallsApp();
 
         public List<string> GetAllCertificateNamesFromCompany(string companyname)
         {
             List<string> result = new List<string>();
-            DataTable request = dataBaseCallsApp.GetAllCertificatesFromCompany(companyname);
+            DataTable request = _dataBaseCallsApp.GetAllCertificatesFromCompany(companyname);
 
             foreach (DataRow dr in request.Rows)
             {
@@ -24,45 +24,64 @@ namespace Business
             return result;
         }
 
-        public List<ActionModel> GetAllActionsFromCertificate()
+        public CertificateModel GetCertificateModel(string certificatename, string companyname)
         {
-            ActionModel a = new ActionModel()
+            CertificateModel result = null;
+            foreach (DataRow dr in _dataBaseCallsApp.GetAllFromCertificate(certificatename, companyname).Rows)
             {
-                Name = "testa",
-                Occurence = OccurenceEnum.Daily
-            };
+                result = new CertificateModel()
+                {
+                    Actions = GetAllActionsFromCertificate(certificatename, companyname),
+                    Description = dr[2].ToString(),
+                    Name = dr[1].ToString(),
+                    CreatedOn = Convert.ToDateTime(dr[3]),
+                    CreatedByEmail = dr[4].ToString(),
+                    CompanyName = dr[5].ToString()
+                };
+            }
 
-            ActionModel b = new ActionModel()
-            {
-                Name = "testb",
-                Occurence = OccurenceEnum.Weekly
-            };
-
-            ActionModel c = new ActionModel()
-            {
-                Name = "testc",
-                Occurence = OccurenceEnum.Monthly
-            };
-
-            ActionModel d = new ActionModel()
-            {
-                Name = "testd",
-                Occurence = OccurenceEnum.Quarterly
-            };
-
-            ActionModel e = new ActionModel()
-            {
-                Name = "teste",
-                Occurence = OccurenceEnum.Yearly
-            };
-
-            List<ActionModel> result = new List<ActionModel>();
-            result.Add(a);
-            result.Add(b);
-            result.Add(c);
-            result.Add(d);
-            result.Add(e);
             return result;
+        }
+
+        private List<ActionModel> GetAllActionsFromCertificate(string certificatename, string companyname)
+        {
+            List<ActionModel> result = new List<ActionModel>();
+
+            DataTable allActionIDs = _dataBaseCallsApp.GetAllActionsFromCertificate(certificatename, companyname);
+
+            foreach (DataRow dr in allActionIDs.Rows )
+            {
+                var test = dr[0].ToString();
+                foreach (DataRow dataRow in _dataBaseCallsApp.GetAllFromAction(Convert.ToInt32(dr[0].ToString())).Rows)
+                {
+                    ActionModel actionModel = new ActionModel()
+                    {
+                        Name = dataRow[1].ToString(),
+                        Description = dataRow[2].ToString(),
+                        BeginDateTime = Convert.ToDateTime(dataRow[3]),
+                        CreatedOn = Convert.ToDateTime(dataRow[4]),
+                        CreatedByEmail = dataRow[5].ToString(),
+                        Occurence = (OccurenceEnum)Enum.Parse(typeof(OccurenceEnum), dataRow[7].ToString(), true),
+                        ResponsibleUserEmail = dataRow[8].ToString(),
+                        EnableNotifications = Convert.ToBoolean(dataRow[9].ToString()),
+                        Comments = null,
+                        CertificateName = certificatename
+                    };
+                    result.Add(actionModel);
+                }
+            }
+
+            return result;
+        }
+
+        public void CreateCertificateinDatabase(CertificateModel certificateModel)
+        {
+            _dataBaseCallsApp.SaveCertificate(certificateModel);
+        }
+
+        public void CreateActionInDatabase(ActionModel actionModel, string companyName, string certificateName)
+        {
+            _dataBaseCallsApp.SaveAction(actionModel, certificateName, companyName);
         }
     }
 }

@@ -8,12 +8,13 @@ namespace DataModels
     {
         public string Name { get; set; }
         public string Description { get; set; }
-        public ApplicationUser ResponsibleUser { get; set; }
+        public string ResponsibleUserEmail { get; set; }
         public DateTime BeginDateTime { get; set; }
         public List<CommentModel> Comments { get; set; }
-        public ApplicationUser CreatedBy { get; set; }
+        public string CreatedByEmail { get; set; }
         public DateTime CreatedOn { get; set; }
         public OccurenceEnum Occurence { get; set; }
-
+        public bool EnableNotifications { get; set; }
+        public string CertificateName { get; set; }
     }
 }

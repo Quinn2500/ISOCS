@@ -32,57 +32,58 @@
                 <div>
                     @using (Html.BeginForm())
                     {
-                    <div class="form-horizontal">
-                        <div>
-                            <label>Titel:</label>
-                            @Html.TextBoxFor(x => x.Title)
-                            @Html.ValidationMessageFor(x => x.Title)
-                        </div>
-                        <div>
-                            <label>Beschrijving:</label>
-                            @Html.TextAreaFor(x => x.Description)
-                            @Html.ValidationMessageFor(x => x.Description)
-                        </div>
-                        <div>
-                            <label>Selecteer frequentie:</label>
-                            @Html.DropDownListFor(x => x.Occurence, (IEnumerable<SelectListItem>)ViewBag.Enums, null, new { @id = "selectEnum", @class = "form-control" })
-
-                        </div>
-
-                        <div>
-                            <label>Selecteer start datum:</label>
-                            @Html.TextBoxFor(x => x.StartDate, new {@id = "datepicker", @width = "276"})
-
-                            <script>
-                                $('#datepicker').datepicker({
-                                    uiLibrary: 'bootstrap4',
-                                    format: 'dd/mm/yyyy',
-                                    language: 'nl'
-
-                                });
-                            </script>
-                        </div>
-                        <div>
-                            <label>Verantwoordelijke:</label>
-                            @Html.DropDownListFor(x => x.ResponsibleUser, (IEnumerable<SelectListItem>)ViewBag.Users, null, new { @id = "selectUser", @class = "form-control" })
-                        </div>
-                        <div>
+                        <div class="form-horizontal">
+                            @Html.HiddenFor(x => x.CertificateName);
                             <div>
-                                <label>Comments:</label>
-                                @Html.CheckBoxFor(x => x.EnableComments)
+                                <label>Titel:</label>
+                                @Html.TextBoxFor(x => x.Title)
+                                @Html.ValidationMessageFor(x => x.Title)
                             </div>
                             <div>
-                                <label>Notificaties:</label>
-                                @Html.CheckBoxFor(x => x.EnableNotifications)
+                                <label>Beschrijving:</label>
+                                @Html.TextAreaFor(x => x.Description)
+                                @Html.ValidationMessageFor(x => x.Description)
                             </div>
                             <div>
-                                <label>Media Uploaden:</label>
-                                @Html.CheckBoxFor(x => x.EnableFileUpload)
-                            </div>
-                        </div>
+                                <label>Selecteer frequentie:</label>
+                                @Html.DropDownListFor(x => x.Occurence, (IEnumerable<SelectListItem>) ViewBag.Enums, null, new {@id = "selectEnum", @class = "form-control"})
 
-                        <input type="submit" name="name" value="Submit" />
-                    </div>
+                            </div>
+
+                            <div>
+                                <label>Selecteer start datum:</label>
+                                @Html.TextBoxFor(x => x.StartDate, new {@id = "datepicker", @width = "276"})
+
+                                <script>
+                                    $('#datepicker').datepicker({
+                                        uiLibrary: 'bootstrap4',
+                                        format: 'dd/mm/yyyy',
+                                        language: 'nl'
+
+                                    });
+                                </script>
+                            </div>
+                            <div>
+                                <label>Verantwoordelijke:</label>
+                                @Html.DropDownListFor(x => x.ResponsibleUser, (IEnumerable<SelectListItem>) ViewBag.Users, null, new {@id = "selectUser", @class = "form-control"})
+                            </div>
+                            <div>
+                                <div>
+                                    <label>Comments:</label>
+                                    @Html.CheckBoxFor(x => x.EnableComments)
+                                </div>
+                                <div>
+                                    <label>Notificaties:</label>
+                                    @Html.CheckBoxFor(x => x.EnableNotifications)
+                                </div>
+                                <div>
+                                    <label>Media Uploaden:</label>
+                                    @Html.CheckBoxFor(x => x.EnableFileUpload)
+                                </div>
+                            </div>
+
+                            <input type="submit" name="name" value="Submit"/>
+                        </div>
                     }
 
 

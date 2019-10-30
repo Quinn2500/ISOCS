@@ -18,7 +18,6 @@ namespace ISOCS.Controllers
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly AppLogic _appLogic;
-        private CertificateModel certificateToCreate;
 
         public AppController(UserManager<ApplicationUser> userManager)
         {
@@ -51,24 +50,47 @@ namespace ISOCS.Controllers
                 }
             }
 
-            ViewBag.Managers = new SelectList(managers, "Email", "FullName");
-            certificateToCreate = new CertificateModel(); 
+            ViewBag.Managers = new SelectList(managers, "Email", "FullName"); 
             return View();
         }
 
         [HttpPost]
-        public ActionResult CreateCertificate(CertificateViewModel model)
+        public async Task<ActionResult> CreateCertificate(CertificateViewModel model)
         {
-            ViewBag.Actions = certificateToCreate.Actions;
-            certificateToCreate = new CertificateModel();
-            dynamic mymodel = new ExpandoObject();
-            mymodel.model = model;
-            mymodel.actions = certificateToCreate.Actions;
-            return View(mymodel);
+            List<ApplicationUser> managers = new List<ApplicationUser>();
+            ApplicationUser loggedInUser = await _userManager.FindByNameAsync(User.Identity.Name);
+            CertificateModel certificateModel = new CertificateModel
+            {
+                Name = model.Title,
+                Description = model.Description,
+                ResponsibleUserEmail  = model.ResponsibleUser,
+                CompanyName = loggedInUser.CompanyName,
+                CreatedByEmail= loggedInUser.Email,
+                CreatedOn = DateTime.Now,
+                EnableNotifications = model.EnableNotifications
+            };
+
+            foreach (ApplicationUser usr in _userManager.Users.Where(u => u.CompanyName == loggedInUser.CompanyName).ToList())
+            {
+                foreach (string role in await _userManager.GetRolesAsync(usr))
+                {
+                    if (role == "Manager")
+                    {
+                        managers.Add(usr);
+                        break;
+                    }
+                }
+            }
+
+            ViewBag.Managers = new SelectList(managers, "Email", "FullName");
+
+            _appLogic.CreateCertificateinDatabase(certificateModel);
+
+            return RedirectToAction("CertificateOverview", new { id = certificateModel.Name });
         }
 
         [HttpGet]
-        public async Task<IActionResult> CreateAction()
+        public async Task<IActionResult> CreateAction(string id)
         {
             List<ApplicationUser> managersAndEmployees = new List<ApplicationUser>();
             ApplicationUser loggedInUser = await _userManager.FindByNameAsync(User.Identity.Name);
@@ -84,68 +106,77 @@ namespace ISOCS.Controllers
                 }
             }
 
+            ActionViewModel model = new ActionViewModel()
+            {
+                CertificateName = id
+            };
             ViewBag.Users = new SelectList(managersAndEmployees, "Email", "FullName");
             ViewBag.Enums = new SelectList(Enum.GetValues(typeof(OccurenceEnum)).OfType<OccurenceEnum>().ToList());
-            return View();
+            return View(model);
         }
 
         [HttpPost]
         public async Task<ActionResult> CreateAction(ActionViewModel model)
         {
+            ApplicationUser loggedInUser = await _userManager.FindByNameAsync(User.Identity.Name);
             ActionModel actionModel = new ActionModel()
             {
                 BeginDateTime = model.StartDate,
                 Comments = null,
-                CreatedBy = await _userManager.FindByNameAsync(User.Identity.Name),
+                CreatedByEmail = loggedInUser.Email,
                 CreatedOn = DateTime.Now,
                 Description = model.Description,
                 Name = model.Title,
                 Occurence = model.Occurence,
-                ResponsibleUser = await _userManager.FindByEmailAsync(model.ResponsibleUser)
-
+                ResponsibleUserEmail = model.ResponsibleUser
             };
-
-            certificateToCreate.Actions.Add(actionModel);
-            ViewBag.Actions = certificateToCreate.Actions;
-            return View(model);
+            _appLogic.CreateActionInDatabase(actionModel, loggedInUser.CompanyName ,model.CertificateName);
+            return RedirectToAction("CertificateOverview", new { id = model.CertificateName });
         }
 
         [HttpGet]
-        public AllActionsPartialViewModel GetActionsPartialViewModel()
+        public async Task<ActionResult> CertificateOverview(string id)
         {
-            AllActionsPartialViewModel model = new AllActionsPartialViewModel
+            ApplicationUser loggedInUser = await _userManager.FindByNameAsync(User.Identity.Name);
+            CertificateModel certificateModel = _appLogic.GetCertificateModel(id, loggedInUser.CompanyName);
+            CertificateOverviewModel viewModel = new CertificateOverviewModel()
             {
-                TasksDaily = new List<string>(),
-                TasksWeekly = new List<string>(),
-                TasksMonthly = new List<string>(),
-                TasksQuarterly = new List<string>(),
-                TasksYearly = new List<string>()
+                Description = certificateModel.Description,
+                EnableNotifications = certificateModel.EnableNotifications,
+                ResponsibleUser = certificateModel.ResponsibleUserEmail,
+                Title = certificateModel.Name,
+                TaskNamesWeekly = new List<string>(),
+                TaskNamesDaily = new List<string>(),
+                TaskNamesYearly = new List<string>(),
+                TaskNamesMonthly = new List<string>(),
+                TaskNamesQuarterly = new List<string>(),
             };
-            foreach (ActionModel action in _appLogic.GetAllActionsFromCertificate())
+            foreach (ActionModel action in certificateModel.Actions)
             {
                 switch (action.Occurence)
                 {
                     case OccurenceEnum.Daily:
-                        model.TasksDaily.Add(action.Name);
+                        viewModel.TaskNamesDaily.Add(action.Name);
                         break;
                     case OccurenceEnum.Weekly:
-                        model.TasksWeekly.Add(action.Name);
+                        viewModel.TaskNamesWeekly.Add(action.Name);
                         break;
                     case OccurenceEnum.Monthly:
-                        model.TasksMonthly.Add(action.Name);
+                        viewModel.TaskNamesMonthly.Add(action.Name);
                         break;
                     case OccurenceEnum.Quarterly:
-                        model.TasksQuarterly.Add(action.Name);
+                        viewModel.TaskNamesQuarterly.Add(action.Name);
                         break;
                     case OccurenceEnum.Yearly:
-                        model.TasksYearly.Add(action.Name);
+                        viewModel.TaskNamesYearly.Add(action.Name);
                         break;
                     default:
                         break;
                 }
             }
 
-            return model;
+            return View(viewModel);
         }
+
     }
 }

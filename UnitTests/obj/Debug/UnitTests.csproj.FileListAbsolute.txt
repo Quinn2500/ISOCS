@@ -117,3 +117,7 @@ D:\GitKraken\Repos\ISOCS\UnitTests\bin\Debug\Renci.SshNet.dll
 D:\GitKraken\Repos\ISOCS\UnitTests\bin\Debug\Google.Protobuf.xml
 D:\GitKraken\Repos\ISOCS\UnitTests\bin\Debug\MySql.Data.xml
 D:\GitKraken\Repos\ISOCS\UnitTests\bin\Debug\Renci.SshNet.xml
+D:\GitKraken\Repos\ISOCS\UnitTests\bin\Debug\DataModels.dll
+D:\GitKraken\Repos\ISOCS\UnitTests\bin\Debug\Microsoft.Extensions.Identity.Stores.dll
+D:\GitKraken\Repos\ISOCS\UnitTests\bin\Debug\DataModels.pdb
+D:\GitKraken\Repos\ISOCS\UnitTests\bin\Debug\Microsoft.Extensions.Identity.Stores.xml

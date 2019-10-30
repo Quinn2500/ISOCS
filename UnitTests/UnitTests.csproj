@@ -83,6 +83,10 @@
       <Project>{8303ed80-3cca-4a3f-9f6f-59166f108bb1}</Project>
       <Name>DAL</Name>
     </ProjectReference>
+    <ProjectReference Include="..\DataModels\DataModels.csproj">
+      <Project>{C34537EF-F1E8-4423-AF6D-7420B9ACB3F8}</Project>
+      <Name>DataModels</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
