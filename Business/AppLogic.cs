@@ -51,8 +51,8 @@ namespace Business
 
             foreach (DataRow dr in allActionIDs.Rows )
             {
-                var test = dr[0].ToString();
-                foreach (DataRow dataRow in _dataBaseCallsApp.GetAllFromAction(Convert.ToInt32(dr[0].ToString())).Rows)
+                DataTable action = _dataBaseCallsApp.GetAllFromAction(Convert.ToInt32(dr[0].ToString()));
+                foreach (DataRow dataRow in action.Rows)
                 {
                     ActionModel actionModel = new ActionModel()
                     {
@@ -82,6 +82,21 @@ namespace Business
         public void CreateActionInDatabase(ActionModel actionModel, string companyName, string certificateName)
         {
             _dataBaseCallsApp.SaveAction(actionModel, certificateName, companyName);
+        }
+
+        public void DeleteAction(string actionName, string certificateName, string companyName)
+        {
+            _dataBaseCallsApp.DeleteActionWithId(_dataBaseCallsApp.GetActionId(actionName, _dataBaseCallsApp.GetCertificateId(certificateName, companyName).GetValueOrDefault()).GetValueOrDefault());
+        }
+
+        public void DeleteCertificate(string certificateName, string companyName)
+        {           
+            DataTable test = _dataBaseCallsApp.GetAllActionsFromCertificate(certificateName, companyName);
+            foreach (DataRow row in test.Rows)
+            {
+                _dataBaseCallsApp.DeleteActionWithId(Convert.ToInt32(row[0].ToString()));
+            }
+            _dataBaseCallsApp.DeleteCertificate(_dataBaseCallsApp.GetCertificateId(certificateName, companyName).GetValueOrDefault());
         }
     }
 }

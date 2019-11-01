@@ -178,5 +178,21 @@ namespace ISOCS.Controllers
             return View(viewModel);
         }
 
+        [HttpGet]
+        public async Task<ActionResult> DeleteCertificate(string id)
+        {
+            ApplicationUser loggedInUser = await _userManager.FindByNameAsync(User.Identity.Name);
+            _appLogic.DeleteCertificate(id, loggedInUser.CompanyName);
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> DeleteAction(string actionName, string certificateName)
+        {
+            ApplicationUser loggedInUser = await _userManager.FindByNameAsync(User.Identity.Name);
+            _appLogic.DeleteAction(actionName, certificateName, loggedInUser.CompanyName);
+            return RedirectToAction("CertificateOverview", new { id = certificateName });
+        }
+
     }
 }

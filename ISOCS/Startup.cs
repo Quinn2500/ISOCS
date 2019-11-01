@@ -68,8 +68,6 @@ namespace ISOCS
                     name: "admin",
                     template: "{controller=Admin}/{action=Index}/{id?}");
 
-
-
             });
         }
     }

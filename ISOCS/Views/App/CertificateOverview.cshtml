@@ -50,15 +50,15 @@
                 <h3>Dagelijkse Taken:</h3>
                 @foreach (string action in Model.TaskNamesDaily)
                 {
-                    <div style="border-radius: 10px; border-style: solid; margin-bottom: 5px;">
-                        <p>@action</p>
-                        <a href="#">
-                            <span class="fas fa-cog"></span>
-                        </a>
-                        <a href="#">
-                            <span class="fas fa-trash-alt"></span>
-                        </a>
-                    </div>
+                <div style="border-radius: 10px; border-style: solid; margin-bottom: 5px;">
+                    <p>@action</p>
+                    <a href="#">
+                        <span class="fas fa-cog"></span>
+                    </a>
+                    <a asp-route-certificateName ="@Model.Title" asp-route-actionName="@action" asp-controller="App" asp-action="DeleteAction">
+                        <span class="fas fa-trash-alt"></span>
+                    </a>
+                </div>
                 }
             </div>
             <div id="weekly" class="col-4">
@@ -70,7 +70,7 @@
                         <a href="#">
                             <span class="fas fa-cog"></span>
                         </a>
-                        <a href="#">
+                        <a asp-route-certificateName ="@Model.Title" asp-route-actionName="@action" asp-controller="App" asp-action="DeleteAction">
                             <span class="fas fa-trash-alt"></span>
                         </a>
                     </div>
@@ -85,7 +85,7 @@
                         <a href="#">
                             <span class="fas fa-cog"></span>
                         </a>
-                        <a href="#">
+                        <a asp-route-certificateName ="@Model.Title" asp-route-actionName="@action" asp-controller="App" asp-action="DeleteAction">
                             <span class="fas fa-trash-alt"></span>
                         </a>
                     </div>
@@ -102,7 +102,7 @@
                         <a href="#">
                             <span class="fas fa-cog"></span>
                         </a>
-                        <a href="#">
+                        <a asp-route-certificateName ="@Model.Title" asp-route-actionName="@action" asp-controller="App" asp-action="DeleteAction">
                             <span class="fas fa-trash-alt"></span>
                         </a>
                     </div>
@@ -117,7 +117,7 @@
                         <a href="#">
                             <span class="fas fa-cog"></span>
                         </a>
-                        <a href="#">
+                        <a asp-route-certificateName ="@Model.Title" asp-route-actionName="@action" asp-controller="App" asp-action="DeleteAction">
                             <span class="fas fa-trash-alt"></span>
                         </a>
                     </div>

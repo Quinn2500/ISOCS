@@ -53,7 +53,7 @@ namespace DAL
 
         public DataTable GetAllFromAction(int actionid)
         {
-            string query = "SELECT action.*, usertoaction.userName, usertoaction.enableNotifications FROM `action` INNER JOIN usertoaction on usertoaction.actionID = action.ID WHERE action.certificateID = @p1";
+            string query = "SELECT action.*, usertoaction.userName, usertoaction.enableNotifications FROM `action` INNER JOIN usertoaction on usertoaction.actionID = action.ID WHERE action.ID = @p1";
             List<MySqlParameter> parameters = new List<MySqlParameter> { new MySqlParameter("@p1", actionid) };
             return _databaseCalls.Select(query, parameters);
         }
@@ -82,9 +82,7 @@ namespace DAL
 
         public void SaveAction(ActionModel action, string certificateName, string companyName)
         {
-            string queryCertificateId = "SELECT certificate.ID FROM `certificate` WHERE certificate.name = @p1 AND certificate.companyName = @p2";
-            List<MySqlParameter> parametersCertificateId = new List<MySqlParameter> { new MySqlParameter("@p1", certificateName), new MySqlParameter("@p2", companyName) };
-            int? certificateId = _databaseCalls.GetOneInt(queryCertificateId, parametersCertificateId);
+            int? certificateId = GetCertificateId(certificateName, companyName);
 
             string queryAction = "INSERT INTO `action` (`name`, `description`, `startOn`, `createdOn`, `createdBy`, `certificateID`, `Occurence`) VALUES (@p1, @p2, @p3, @p4, @p5, @p6, @p7);";
             List<MySqlParameter> parametersAction = new List<MySqlParameter>
@@ -108,6 +106,48 @@ namespace DAL
             };
             _databaseCalls.Command(query, parameters);
 
+
+        }
+
+        public int? GetCertificateId(string certificateName, string companyName)
+        {
+            string queryCertificateId = "SELECT certificate.ID FROM `certificate` WHERE certificate.name = @p1 AND certificate.companyName = @p2";
+            List<MySqlParameter> parametersCertificateId = new List<MySqlParameter> { new MySqlParameter("@p1", certificateName), new MySqlParameter("@p2", companyName) };
+            return _databaseCalls.GetOneInt(queryCertificateId, parametersCertificateId);
+        }
+
+        public int? GetActionId(string actionName, int certificateId)
+        {
+            string queryCertificateId = "SELECT action.ID FROM `action` WHERE action.name = @p1 AND action.certificateID = @p2";
+            List<MySqlParameter> parametersCertificateId = new List<MySqlParameter> { new MySqlParameter("@p1", actionName), new MySqlParameter("@p2", certificateId) };
+            return _databaseCalls.GetOneInt(queryCertificateId, parametersCertificateId);
+        }
+
+        public void DeleteActionWithId(int actionId)
+        {
+            string queryDeleteUserToAction = "DELETE FROM `usertoaction` WHERE usertoaction.actionID = @pActionId";
+            List<MySqlParameter> parametersActionId = new List<MySqlParameter>
+            {
+                new MySqlParameter("@pActionID", actionId),
+            };
+            _databaseCalls.Command(queryDeleteUserToAction, parametersActionId);
+
+            string queryDeleteAction = "DELETE FROM `action` WHERE action.ID = @pActionId";
+            _databaseCalls.Command(queryDeleteAction, parametersActionId);
+
+        }
+
+        public void DeleteCertificate(int certificateId)
+        {
+            string queryResUser = "DELETE FROM `usertocertificate` WHERE usertocertificate.certificateID = @pCerId";
+            List<MySqlParameter> parametersCer = new List<MySqlParameter>
+            {
+                new MySqlParameter("@pCerId", certificateId)
+            };
+            _databaseCalls.Command(queryResUser, parametersCer);
+
+            string queryCertificate = "DELETE FROM `certificate` WHERE certificate.ID = @pCerId";
+            _databaseCalls.Command(queryCertificate, parametersCer);
 
         }
     }
