@@ -1,0 +1,139 @@
+﻿@using DataModels
+@using ISOCS.Models.AppViewModel
+@model ISOCS.Models.AppViewModel.ActionOverviewViewModel
+@{
+    ViewData["Title"] = "CreateCertificate";
+    Layout = "~/Views/Shared/appLayout.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>_Layout</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <link href="~/css/bootstrap.css" rel="stylesheet" />
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js" integrity="sha384-xrRywqdh3PHs8keKZN+8zzc5TX0GRTLCcmivcbNJWm2rs5C8PRhcEn3czEjhAO9o" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+</head>
+<body>
+<div class="container">
+
+    <div class="col-8">
+        <div class="row">
+            <div class="col-6">
+                <div>
+                    <h1>@Model.Name</h1>
+                </div>
+                <div>
+                    <p>@Model.Description</p>
+                </div>
+                <div>
+                    <p>Verantwoordelijk: @Model.ResponsibleUserEmail</p>
+                    <p>@Model.DateToExecute</p>
+                </div>
+            </div>
+            <div class="col-6">
+                <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#historyModal">Zie Historie!</button>
+                
+                <div class="modal fade" id="historyModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                     aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header text-center">
+                                <h4 class="modal-title w-100 font-weight-bold">Handelingen Historie</h4>
+                            </div>
+                            <div class="modal-body">
+                                <div class="md-form mb-5">
+                                    <textarea id="txtAreaComment"></textarea>
+                                    <button onclick="javascript: postComment();" type="button">Plaats je Opmerking!</button>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">Cancel</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="row">
+            <div>
+                <a class="btn btn-success"  asp-route-executionSucces="@true" asp-route-actionName="@Model.Name" asp-route-certificateName="@Model.CertificateName" asp-controller="App" asp-action="ExecuteAction">Taak is succesvol uitgevoerd!</a>
+                <a class="btn btn-danger" asp-route-executionSucces="@false" asp-route-actionName="@Model.Name" asp-route-certificateName="@Model.CertificateName" asp-controller="App" asp-action="ExecuteAction">Taak is niet gelukt.</a>
+            </div>
+        </div>
+    </div>
+        
+    <div class="col-3">
+        <h1>Opmerkingen:</h1>
+        @if (Model.Comments != null)
+        {
+            foreach (CommentViewModel comment in Model.Comments)
+            {
+                <div>
+                    <p>@comment.Contents</p>
+                    <p>@comment.OwnerFullName +""+ @comment.CreateDateTime</p>
+                </div>
+            }
+        }
+        <div>
+            <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#commentModal">Plaats Comment!</button>
+        </div>
+
+    </div>
+        
+    <div class="modal fade" id="commentModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header text-center">
+                    <h4 class="modal-title w-100 font-weight-bold">Weet je het zeker?</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="md-form mb-5">
+                        <textarea id="txtAreaComment"></textarea>
+                        <button onclick="javascript: postComment();" type="button">Plaats je Opmerking!</button>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">Cancel</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+
+
+
+</body>
+</html>
+
+<script>
+    function postComment() {
+        console.log($("#txtAreaComment").val());
+        $.ajax({
+            async: false,
+            type: "POST",
+            global: false,
+            dataType: 'json',
+            url: '@Url.Action("PostComment", "App")',
+            data: {
+                'commentContent': $("#txtAreaComment").val(),
+                'actionName': "@Model.Name",
+                'certificateName': "@Model.CertificateName"
+            },
+            success: function(data) {
+                console.log(data);
+                $('#commentModal').modal('hide');
+            }
+        });
+    }
+</script>

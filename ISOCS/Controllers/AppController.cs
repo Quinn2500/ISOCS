@@ -34,6 +34,7 @@ namespace ISOCS.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Manager")]
         public async Task<ActionResult> CreateCertificate()
         {
             List<ApplicationUser> managers = new List<ApplicationUser>();
@@ -55,6 +56,7 @@ namespace ISOCS.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Manager")]
         public async Task<ActionResult> CreateCertificate(CertificateViewModel model)
         {
             List<ApplicationUser> managers = new List<ApplicationUser>();
@@ -90,6 +92,7 @@ namespace ISOCS.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> CreateAction(string id)
         {
             List<ApplicationUser> managersAndEmployees = new List<ApplicationUser>();
@@ -106,7 +109,7 @@ namespace ISOCS.Controllers
                 }
             }
 
-            ActionViewModel model = new ActionViewModel()
+            ActionViewModel model = new ActionViewModel
             {
                 CertificateName = id
             };
@@ -116,13 +119,13 @@ namespace ISOCS.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Manager")]
         public async Task<ActionResult> CreateAction(ActionViewModel model)
         {
             ApplicationUser loggedInUser = await _userManager.FindByNameAsync(User.Identity.Name);
             ActionModel actionModel = new ActionModel()
             {
-                BeginDateTime = model.StartDate,
-                Comments = null,
+                StartDate = model.StartDate,
                 CreatedByEmail = loggedInUser.Email,
                 CreatedOn = DateTime.Now,
                 Description = model.Description,
@@ -130,11 +133,12 @@ namespace ISOCS.Controllers
                 Occurence = model.Occurence,
                 ResponsibleUserEmail = model.ResponsibleUser
             };
-            _appLogic.CreateActionInDatabase(actionModel, loggedInUser.CompanyName ,model.CertificateName);
+            _appLogic.CreateActionInDatabase(actionModel,model.CertificateName, loggedInUser.CompanyName);
             return RedirectToAction("CertificateOverview", new { id = model.CertificateName });
         }
 
         [HttpGet]
+        [Authorize(Roles = "Manager,Employee")]
         public async Task<ActionResult> CertificateOverview(string id)
         {
             ApplicationUser loggedInUser = await _userManager.FindByNameAsync(User.Identity.Name);
@@ -179,6 +183,7 @@ namespace ISOCS.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Manager")]
         public async Task<ActionResult> DeleteCertificate(string id)
         {
             ApplicationUser loggedInUser = await _userManager.FindByNameAsync(User.Identity.Name);
@@ -187,6 +192,7 @@ namespace ISOCS.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Manager")]
         public async Task<ActionResult> DeleteAction(string actionName, string certificateName)
         {
             ApplicationUser loggedInUser = await _userManager.FindByNameAsync(User.Identity.Name);
@@ -194,5 +200,65 @@ namespace ISOCS.Controllers
             return RedirectToAction("CertificateOverview", new { id = certificateName });
         }
 
+        [HttpGet]
+        [Authorize(Roles = "Employee,Manager")]
+        public async Task<ActionResult> ActionOverview(string actionName, string certificateName)
+        {
+            ApplicationUser loggedInUser = await _userManager.FindByNameAsync(User.Identity.Name);
+            ActionToComplete actionModel = _appLogic.GetActionToComplete(actionName,certificateName, loggedInUser.CompanyName);
+            List<CommentViewModel> comments = new List<CommentViewModel>();
+
+            foreach (CommentModel comment in actionModel.Comments)
+            {
+                ApplicationUser user = await _userManager.FindByEmailAsync(comment.Owner);
+                CommentViewModel commentViewModel = new CommentViewModel
+                {
+                    Contents = comment.Contents,
+                    CreateDateTime = comment.CreateDateTime,
+                    OwnerFullName = user.FullName
+                };
+                comments.Add(commentViewModel);
+            }
+
+            ActionOverviewViewModel model = new ActionOverviewViewModel
+            {
+                Comments = comments,
+                CreatedByEmail = actionModel.Action.CreatedByEmail,
+                CreatedOn = actionModel.Action.CreatedOn,
+                DateToExecute = actionModel.DateToExecute,
+                Description = actionModel.Action.Description,
+                Name = actionModel.Action.Name,
+                Occurence = actionModel.Action.Occurence,
+                ResponsibleUserEmail = actionModel.Action.ResponsibleUserEmail,
+                CertificateName = certificateName
+            };
+            
+            return View(model);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Employee,Manager")]
+        public async Task<ActionResult> PostComment(string commentContent ,string actionName, string certificateName)
+        {
+            ApplicationUser loggedInUser = await _userManager.FindByNameAsync(User.Identity.Name);
+               CommentModel comment = new CommentModel
+               {
+                   Contents = commentContent,
+                   CreateDateTime = DateTime.Now,
+                   Owner = loggedInUser.Email
+               };
+            _appLogic.PostComment(comment, actionName, certificateName, loggedInUser.CompanyName);
+
+            return RedirectToAction("ActionOverview", new { actionName, certificateName});
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Employee,Manager")]
+        public async Task<ActionResult> ExecuteAction(bool executionSucces, string actionName, string certificateName)
+        {
+            ApplicationUser loggedInUser = await _userManager.FindByNameAsync(User.Identity.Name);
+            _appLogic.CompleteAction(executionSucces,actionName,certificateName,loggedInUser);
+            return RedirectToAction("ActionOverview", new { actionName, certificateName });
+        }
     }
 }

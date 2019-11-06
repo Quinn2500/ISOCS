@@ -11,7 +11,8 @@
         "dependencies": {
           "DAL": "1.0.0",
           "DataModels": "1.0.0",
-          "NETStandard.Library": "2.0.3"
+          "NETStandard.Library": "2.0.3",
+          "Microsoft.Extensions.Identity.Stores": "2.0.4.0"
         },
         "runtime": {
           "Business.dll": {}
@@ -1256,14 +1257,13 @@
       },
       "DataModels/1.0.0": {
         "dependencies": {
-          "Microsoft.AspNetCore.Identity": "1.1.0",
-          "Microsoft.Extensions.Identity.Stores": "2.0.4.0"
+          "Microsoft.AspNetCore.Identity": "1.1.0"
         },
         "runtime": {
           "DataModels.dll": {}
         }
       },
-      "Microsoft.Extensions.Identity.Stores.Reference/2.0.4.0": {
+      "Microsoft.Extensions.Identity.Stores/2.0.4.0": {
         "runtime": {
           "Microsoft.Extensions.Identity.Stores.dll": {
             "assemblyVersion": "2.0.4.0",
@@ -1975,7 +1975,7 @@
       "serviceable": false,
       "sha512": ""
     },
-    "Microsoft.Extensions.Identity.Stores.Reference/2.0.4.0": {
+    "Microsoft.Extensions.Identity.Stores/2.0.4.0": {
       "type": "reference",
       "serviceable": false,
       "sha512": ""

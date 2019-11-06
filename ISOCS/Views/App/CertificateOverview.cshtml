@@ -1,8 +1,10 @@
 ﻿@using DataModels
 @model ISOCS.Models.AppViewModel.CertificateOverviewModel
+@inject UserManager<ApplicationUser> UserManager
 @{
     ViewData["Title"] = "Certificaat";
     Layout = "~/Views/Shared/appLayout.cshtml";
+    string role = UserManager.GetRolesAsync(await UserManager.FindByNameAsync(User.Identity.Name)).Result[0].ToLower();
 }
 <!DOCTYPE html>
 
@@ -21,44 +23,65 @@
         <div class="row">
             <div class="col-9">
                 <div>
-                    @using (Html.BeginForm())
+                    @if (role.Equals("manager"))
                     {
-                        <div class="form-horizontal">
-                            <div>
-                                <label>Titel:</label>
-                                @Html.TextBoxFor(x => x.Title)
-                                @Html.ValidationMessageFor(x => x.Title)
-                            </div>
-                            <div>
-                                <label>Beschrijving:</label>
-                                @Html.TextAreaFor(x => x.Description)
-                                @Html.ValidationMessageFor(x => x.Description)
-                            </div>
+                        using (Html.BeginForm())
+                        {
+                            <div class="form-horizontal">
+                                <div>
+                                    <label>Titel:</label>
+                                    @Html.TextBoxFor(x => x.Title)
+                                    @Html.ValidationMessageFor(x => x.Title)
+                                </div>
+                                <div>
+                                    <label>Beschrijving:</label>
+                                    @Html.TextAreaFor(x => x.Description)
+                                    @Html.ValidationMessageFor(x => x.Description)
+                                </div>
 
-                            <input type="submit" name="name" value="Submit" />
+                                <input type="submit" name="name" value="Submit"/>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div>
+                            <div>
+                                <h1>@Model.Title</h1>
+                            </div>
+                            <div>
+                                <h1>@Model.Description</h1>
+                            </div>
                         </div>
                     }
 
                 </div>
             </div>
         </div>
+
         <div class="row">
-            <a class="btn btn-success" asp-route-id ="@Model.Title" asp-controller="App" asp-action="CreateAction">Voeg een taak toe</a>
+            @if (role.Equals("manager"))
+            {
+                <a class="btn btn-success" asp-route-id="@Model.Title" asp-controller="App" asp-action="CreateAction">Voeg een taak toe</a>
+            }
         </div>
         <div class="row">
             <div style="border-radius: 20px; border-style: solid;" id="daily" class="col-4">
                 <h3>Dagelijkse Taken:</h3>
                 @foreach (string action in Model.TaskNamesDaily)
                 {
-                <div style="border-radius: 10px; border-style: solid; margin-bottom: 5px;">
-                    <p>@action</p>
-                    <a href="#">
-                        <span class="fas fa-cog"></span>
-                    </a>
-                    <a asp-route-certificateName ="@Model.Title" asp-route-actionName="@action" asp-controller="App" asp-action="DeleteAction">
-                        <span class="fas fa-trash-alt"></span>
-                    </a>
-                </div>
+                    <div style="border-radius: 10px; border-style: solid; margin-bottom: 5px;">
+                        <a asp-route-certificateName="@Model.Title" asp-route-actionName="@action" asp-controller="App" asp-action="ActionOverview"> @action </a>
+                            @if (role.Equals("manager"))
+                            {
+                                <a href="#">
+                                    <span class="fas fa-cog"></span>
+                                </a>
+                                <a asp-route-certificateName="@Model.Title" asp-route-actionName="@action" asp-controller="App" asp-action="DeleteAction">
+                                    <span class="fas fa-trash-alt"></span>
+                                </a>
+                            }
+                    </div>
                 }
             </div>
             <div id="weekly" class="col-4">
@@ -66,13 +89,16 @@
                 @foreach (string action in Model.TaskNamesWeekly)
                 {
                     <div>
-                        <p>@action</p>
-                        <a href="#">
-                            <span class="fas fa-cog"></span>
-                        </a>
-                        <a asp-route-certificateName ="@Model.Title" asp-route-actionName="@action" asp-controller="App" asp-action="DeleteAction">
-                            <span class="fas fa-trash-alt"></span>
-                        </a>
+                        <a asp-route-certificateName="@Model.Title" asp-route-actionName="@action" asp-controller="App" asp-action="ActionOverview"> @action </a><p>@action</p>
+                        @if (role.Equals("manager"))
+                        {
+                            <a href="#">
+                                <span class="fas fa-cog"></span>
+                            </a>
+                            <a asp-route-certificateName="@Model.Title" asp-route-actionName="@action" asp-controller="App" asp-action="DeleteAction">
+                                <span class="fas fa-trash-alt"></span>
+                            </a>
+                        }
                     </div>
                 }
             </div>
@@ -80,15 +106,18 @@
                 <h3>Maandelijkse Taken:</h3>
                 @foreach (string action in Model.TaskNamesMonthly)
                 {
-                    <div>
-                        <p>@action</p>
+                <div>
+                    <a asp-route-certificateName="@Model.Title" asp-route-actionName="@action" asp-controller="App" asp-action="ActionOverview"> @action </a>
+                    @if (role.Equals("manager"))
+                    {
                         <a href="#">
                             <span class="fas fa-cog"></span>
                         </a>
-                        <a asp-route-certificateName ="@Model.Title" asp-route-actionName="@action" asp-controller="App" asp-action="DeleteAction">
+                        <a asp-route-certificateName="@Model.Title" asp-route-actionName="@action" asp-controller="App" asp-action="DeleteAction">
                             <span class="fas fa-trash-alt"></span>
                         </a>
-                    </div>
+                    }
+                </div>
                 }
             </div>
         </div>
@@ -98,13 +127,16 @@
                 @foreach (string action in Model.TaskNamesQuarterly)
                 {
                     <div>
-                        <p>@action</p>
-                        <a href="#">
-                            <span class="fas fa-cog"></span>
-                        </a>
-                        <a asp-route-certificateName ="@Model.Title" asp-route-actionName="@action" asp-controller="App" asp-action="DeleteAction">
-                            <span class="fas fa-trash-alt"></span>
-                        </a>
+                        <a asp-route-certificateName="@Model.Title" asp-route-actionName="@action" asp-controller="App" asp-action="ActionOverview"> @action </a>
+                        @if (role.Equals("manager"))
+                        {
+                            <a href="#">
+                                <span class="fas fa-cog"></span>
+                            </a>
+                            <a asp-route-certificateName="@Model.Title" asp-route-actionName="@action" asp-controller="App" asp-action="DeleteAction">
+                                <span class="fas fa-trash-alt"></span>
+                            </a>
+                        }
                     </div>
                 }
             </div>
@@ -112,15 +144,18 @@
                 <h3>Jaarlijkse Taken:</h3>
                 @foreach (string action in Model.TaskNamesYearly)
                 {
-                    <div>
-                        <p>@action</p>
+                <div>
+                    <a asp-route-certificateName="@Model.Title" asp-route-actionName="@action" asp-controller="App" asp-action="ActionOverview"> @action </a>
+                    @if (role.Equals("manager"))
+                    {
                         <a href="#">
                             <span class="fas fa-cog"></span>
                         </a>
-                        <a asp-route-certificateName ="@Model.Title" asp-route-actionName="@action" asp-controller="App" asp-action="DeleteAction">
+                        <a asp-route-certificateName="@Model.Title" asp-route-actionName="@action" asp-controller="App" asp-action="DeleteAction">
                             <span class="fas fa-trash-alt"></span>
                         </a>
-                    </div>
+                    }
+                </div>
                 }
             </div>
         </div>

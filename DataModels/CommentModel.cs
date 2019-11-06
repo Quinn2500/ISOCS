@@ -8,7 +8,7 @@ namespace DataModels
     {
         public int Id { get; set; }
         public string Contents { get; set; }
-        public ApplicationUser Owner { get; set; }
+        public string Owner { get; set; }
         public DateTime CreateDateTime { get; set; }
     }
 }

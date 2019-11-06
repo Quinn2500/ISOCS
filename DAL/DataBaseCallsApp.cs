@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Text;
 using DataModels;
+using Microsoft.AspNetCore.Identity;
 using MySql.Data.MySqlClient;
 
 namespace DAL
@@ -18,13 +19,6 @@ namespace DAL
             {
                 new MySqlParameter("@p1", companyname)
             };
-            return _databaseCalls.Select(query, parameters);
-        }
-
-        public DataTable GetAllActionsFromCertificate(string certificatename)
-        {
-            string query = "SELECT * FROM `action` WHERE action.certificateName = @p1 ";
-            List<MySqlParameter> parameters = new List<MySqlParameter> {new MySqlParameter("@p1", certificatename)};
             return _databaseCalls.Select(query, parameters);
         }
 
@@ -58,13 +52,6 @@ namespace DAL
             return _databaseCalls.Select(query, parameters);
         }
 
-        public DataTable GetAllCommentsOnAction(int actionid)
-        {
-            string query = "SELECT * FROM `comments` WHERE comments.actionID = @p1";
-            List<MySqlParameter> parameters = new List<MySqlParameter> { new MySqlParameter("@p1", actionid) };
-            return _databaseCalls.Select(query, parameters);
-        }
-
         public DataTable GetAllActionsFromCertificate(string certificateName, string companyName)
         {
             string query = "SELECT action.ID FROM `certificate` INNER JOIN action on certificate.ID = action.certificateID WHERE certificate.name = @p1 AND certificate.companyName = @p2";
@@ -89,7 +76,7 @@ namespace DAL
             {
                 new MySqlParameter("@p1", action.Name),
                 new MySqlParameter("@p2", action.Description),
-                new MySqlParameter("@p3", action.BeginDateTime.Date),
+                new MySqlParameter("@p3", action.StartDate.Date),
                 new MySqlParameter("@p4", action.CreatedOn),
                 new MySqlParameter("@p5", action.CreatedByEmail),
                 new MySqlParameter("@p6", certificateId),
@@ -137,6 +124,16 @@ namespace DAL
 
         }
 
+        public void DeleteAllActionHistory(int actionId)
+        {
+            string queryDeleteUserToAction = "DELETE FROM `actionhistory` WHERE actionhistory.actionID = @pActionId";
+            List<MySqlParameter> parametersActionId = new List<MySqlParameter>
+            {
+                new MySqlParameter("@pActionID", actionId),
+            };
+            _databaseCalls.Command(queryDeleteUserToAction, parametersActionId);
+        }
+
         public void DeleteCertificate(int certificateId)
         {
             string queryResUser = "DELETE FROM `usertocertificate` WHERE usertocertificate.certificateID = @pCerId";
@@ -149,6 +146,116 @@ namespace DAL
             string queryCertificate = "DELETE FROM `certificate` WHERE certificate.ID = @pCerId";
             _databaseCalls.Command(queryCertificate, parametersCer);
 
+        }
+
+        public DataTable GetAllFromActionToExecute(int actionId)
+        {
+            string query = "SELECT * FROM `actionhistory` WHERE actionhistory.actionID = @pActionId AND actionhistory.executedOn IS NULL";
+            List<MySqlParameter> parameters = new List<MySqlParameter>
+            {
+                new MySqlParameter("@pActionId", actionId)
+            };
+            return _databaseCalls.Select(query, parameters);
+        }
+
+        public void SaveActionToComplete(int actionId, DateTime dateToExecute)
+        {
+            string query = "INSERT INTO `actionhistory` (`actionID`, `dateToExecute`) VALUES (@pActionId , @pDateToExecute);";
+            List<MySqlParameter> parameters = new List<MySqlParameter>
+            {
+                new MySqlParameter("@pActionId", actionId),
+                new MySqlParameter("@pDateToExecute", dateToExecute)
+            };
+            _databaseCalls.Command(query, parameters);
+
+
+        }
+
+        public int GetRecentActionHistoryId(int actionId)
+        {
+            string query = "SELECT actionhistory.ID FROM `actionhistory` WHERE actionhistory.actionID = @pActionId AND actionhistory.executedOn IS NULL";
+            List<MySqlParameter> parameters = new List<MySqlParameter>
+            {
+                new MySqlParameter("@pActionId", actionId)
+            };
+            return _databaseCalls.GetOneInt(query, parameters).GetValueOrDefault();
+        }
+
+        public void ExecuteAction(int actionHistoryId, bool executionSucces, string userEmail, DateTime dateExecution)
+        {
+            string query =
+                "UPDATE `actionhistory` SET `executedOn` = @pExecutedOn, `executedBy` = @pExecutedBy, `executionSucceeded` = @pExeSucces WHERE `actionhistory`.`ID` = @pActionHId;";
+            List<MySqlParameter> parameters = new List<MySqlParameter>
+            {
+                new MySqlParameter("@pActionHId", actionHistoryId),
+                new MySqlParameter("@pExeSucces", executionSucces),
+                new MySqlParameter("@pExecutedBy", userEmail),
+                new MySqlParameter("@pExecutedOn", dateExecution)
+            };
+            _databaseCalls.Command(query, parameters);
+        }
+
+        public void PostComment(string commentContent, DateTime creationDate, string ownerEmail, int actionHistoryId)
+        {
+            string query = "INSERT INTO `comments` (`content`, `commentedBy`, `actionHistoryID`, `createdOn`) VALUES (@pContent, @pOwner, @pActHId, @pCreatedOn);";
+            List<MySqlParameter> parameters = new List<MySqlParameter>
+            {
+                new MySqlParameter("@pContent", commentContent),
+                new MySqlParameter("@pOwner", ownerEmail),
+                new MySqlParameter("@pActHId", actionHistoryId),
+                new MySqlParameter("@pCreatedOn", creationDate)
+            };
+            _databaseCalls.Command(query, parameters);
+        }
+
+        public DataTable GetAllComments(int actionHistoryId)
+        {
+            string query = "SELECT * FROM `comments` WHERE comments.actionHistoryID = @pActionHId";
+            List<MySqlParameter> parameters = new List<MySqlParameter>
+            {
+                new MySqlParameter("@pActionHId", actionHistoryId)
+            };
+            return _databaseCalls.Select(query, parameters);
+        }
+
+        public void DeleteAllCommentsFromHistoryAction(int actionHistoryId)
+        {
+            string query = "DELETE FROM `comments` WHERE comments.actionHistoryID = @pActionHId";
+            List<MySqlParameter> parameters = new List<MySqlParameter>
+            {
+                new MySqlParameter("@pActionHId", actionHistoryId)
+            };
+            _databaseCalls.Command(query, parameters);
+        }
+
+        public DataTable GetAllHistoryActionsId(int actionId)
+        {
+            string query = "SELECT actionhistory.ID FROM `actionhistory` WHERE actionhistory.actionID = @pActionId";
+            List<MySqlParameter> parameters = new List<MySqlParameter>
+            {
+                new MySqlParameter("@pActionId", actionId)
+            };
+            return _databaseCalls.Select(query, parameters);
+        }
+
+        public int GetOldestHistoryEntry(int actionId)
+        {
+            string query = "SELECT actionhistory.ID FROM `actionhistory` WHERE actionhistory.executedOn = (SELECT MIN(actionhistory.executedOn) FROM actionhistory WHERE actionhistory.actionID = @pActionId) AND actionhistory.actionID = @pActionId";
+            List<MySqlParameter> parameters = new List<MySqlParameter>
+            {
+                new MySqlParameter("@pActionId", actionId)
+            };
+            return _databaseCalls.GetOneInt(query, parameters).GetValueOrDefault();
+        }
+
+        public void DeleteHistoryAction(int actionHistoryId)
+        {
+            string query = "DELETE FROM `actionhistory` WHERE actionhistory.ID = @pActionHId";
+            List<MySqlParameter> parameters = new List<MySqlParameter>
+            {
+                new MySqlParameter("@pActionHId", actionHistoryId)
+            };
+            _databaseCalls.Command(query, parameters);
         }
     }
 }

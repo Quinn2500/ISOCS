@@ -4,10 +4,10 @@ using System.Text;
 
 namespace DataModels
 {
-    public class CompletedAction
+    public class ActionToComplete
     {
         public ActionModel Action { get; set; }
-        public ApplicationUser CompletedBy { get; set; }
-        public DateTime CompletedOn { get; set; }
+        public DateTime DateToExecute { get; set; }
+        public List<CommentModel> Comments { get; set; }
     }
 }
