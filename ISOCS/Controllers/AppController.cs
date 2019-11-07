@@ -236,6 +236,43 @@ namespace ISOCS.Controllers
             return View(model);
         }
 
+        [HttpGet]
+        [Authorize(Roles = "Employee,Manager")]
+        public ActionResult CompletedAction(int actionHistoryId)
+        {
+            CompletedAction action = _appLogic.GetCompletedAction(actionHistoryId);
+
+            List<CommentViewModel> comments = new List<CommentViewModel>();
+
+            foreach (CommentModel comment in action.Comments)
+            {
+                CommentViewModel commentViewModel = new CommentViewModel
+                {
+                    Contents = comment.Contents,
+                    CreateDateTime = comment.CreateDateTime,
+                    OwnerFullName = comment.Owner
+                };
+                comments.Add(commentViewModel);
+            }
+            
+            CompletedActionViewModel model = new CompletedActionViewModel
+            {
+                ExecutionSucces = action.ExecutionSucces,
+                Comments = comments,
+                CompletedByEmail = action.CompletedByEmail,
+                CompletedOn = action.CompletedOn,
+                CreatedByEmail = action.CompletedByEmail,
+                CreatedOn = action.Action.CreatedOn,
+                DateToExecute = action.DateToExecute,
+                Description = action.Action.Description,
+                Name = action.Action.Name,
+                Occurence = action.Action.Occurence
+
+            };
+
+            return View(model);
+        }
+
         [HttpPost]
         [Authorize(Roles = "Employee,Manager")]
         public async Task<ActionResult> PostComment(string commentContent ,string actionName, string certificateName)

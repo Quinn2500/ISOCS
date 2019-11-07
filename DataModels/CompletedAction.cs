@@ -6,8 +6,12 @@ namespace DataModels
 {
     public class CompletedAction
     {
+        public int ActionHistoryId { get; set; }
         public ActionModel Action { get; set; }
-        public ApplicationUser CompletedBy { get; set; }
+        public List<CommentModel> Comments { get; set; }
+        public string CompletedByEmail { get; set; }
         public DateTime CompletedOn { get; set; }
+        public bool ExecutionSucces { get; set; }
+        public DateTime DateToExecute { get; set; }
     }
 }

@@ -257,5 +257,15 @@ namespace DAL
             };
             _databaseCalls.Command(query, parameters);
         }
+
+        public DataTable GetAllFromHistoryAction(int actionHistoryId)
+        {
+            string query = "SELECT * FROM `actionhistory` WHERE actionhistory.ID = @pActionHistoryId";
+            List<MySqlParameter> parameters = new List<MySqlParameter>
+            {
+                new MySqlParameter("@pActionHistoryId", actionHistoryId)
+            };
+            return _databaseCalls.Select(query, parameters);
+        }
     }
 }

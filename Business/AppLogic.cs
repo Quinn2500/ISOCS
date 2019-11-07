@@ -108,8 +108,21 @@ namespace Business
         public ActionToComplete GetActionToComplete(string actionName, string certificateName, string companyName)
         {
             DataTable dataTable = _dataBaseCallsApp.GetAllFromActionToExecute(GetActionId(actionName, companyName, certificateName));
+            ActionToComplete result = new ActionToComplete
+            {
+                Action = GetAction(actionName, certificateName, companyName),
+                DateToExecute = Convert.ToDateTime(dataTable.Rows[0][2]),
+                Comments = GetAllComments(Convert.ToInt32(dataTable.Rows[0][0]))
+            };
+
+            return result;
+        }
+
+        private List<CommentModel> GetAllComments(int actionHistoryId)
+        {
             List<CommentModel> comments = new List<CommentModel>();
-            foreach (DataRow row in _dataBaseCallsApp.GetAllComments(Convert.ToInt32(dataTable.Rows[0][0])).Rows)
+
+            foreach (DataRow row in _dataBaseCallsApp.GetAllComments(actionHistoryId).Rows)
             {
                 CommentModel comment = new CommentModel
                 {
@@ -119,14 +132,8 @@ namespace Business
                 };
                 comments.Add(comment);
             }
-            ActionToComplete result = new ActionToComplete
-            {
-                Action = GetAction(actionName, certificateName, companyName),
-                DateToExecute = Convert.ToDateTime(dataTable.Rows[0][2]),
-                Comments = comments
-            };
 
-            return result;
+            return comments;
         }
 
         public void CompleteAction(bool executionSucces, string actioName, string certificateName, ApplicationUser userThatCompleted)
@@ -216,6 +223,31 @@ namespace Business
             return result;
         }
 
+        public ActionModel GetAction(int actionId)
+        {
+            ActionModel result = new ActionModel();
+            DataTable actionDataTable = _dataBaseCallsApp.GetAllFromAction(actionId);
+
+            foreach (DataRow dataRow in actionDataTable.Rows)
+            {
+                ActionModel actionModel = new ActionModel()
+                {
+                    Name = dataRow[1].ToString(),
+                    Description = dataRow[2].ToString(),
+                    StartDate = Convert.ToDateTime(dataRow[3]),
+                    CreatedOn = Convert.ToDateTime(dataRow[4]),
+                    CreatedByEmail = dataRow[5].ToString(),
+                    Occurence = (OccurenceEnum)Enum.Parse(typeof(OccurenceEnum), dataRow[7].ToString(), true),
+                    ResponsibleUserEmail = dataRow[8].ToString(),
+                    EnableNotifications = Convert.ToBoolean(dataRow[9].ToString())
+                };
+                result = actionModel;
+            }
+
+            return result;
+        }
+
+
         public void PostComment(CommentModel comment, string actionName, string certificateName, string companyName)
         {
             int actionHistoryId =
@@ -229,7 +261,49 @@ namespace Business
             return _dataBaseCallsApp.GetActionId(actionName,
                 _dataBaseCallsApp.GetCertificateId(certificateName, companyName).GetValueOrDefault()).GetValueOrDefault();
 
-        } 
+        }
+
+        public List<CompletedAction> GetActionHistory(string actionName, string companyName, string certificateName)
+        {
+            List<CompletedAction> result = new List<CompletedAction>();           
+            foreach (DataRow dataRow in _dataBaseCallsApp.GetAllHistoryActionsId(GetActionId(actionName, companyName, certificateName)).Rows)
+            {
+                DataRow row = _dataBaseCallsApp.GetAllFromHistoryAction(Convert.ToInt32(dataRow[0])).Rows[0];
+                if (row[3] != DBNull.Value)
+                {
+                    CompletedAction completedAction = new CompletedAction
+                    {
+                        ActionHistoryId = Convert.ToInt32(dataRow[0]),
+                        Action = GetAction(actionName, companyName, certificateName),
+                        Comments = GetAllComments(Convert.ToInt32(dataRow[0])),
+                        CompletedByEmail = row[4].ToString(),
+                        CompletedOn = Convert.ToDateTime(row[3]),
+                        ExecutionSucces = Convert.ToBoolean(row[5]),
+                        DateToExecute = Convert.ToDateTime(row[2])
+                    };
+                    result.Add(completedAction);
+                }
+            }
+
+            return result;
+        }
+
+        public CompletedAction GetCompletedAction(int actionHistoryId)
+        {
+            DataRow row = _dataBaseCallsApp.GetAllFromHistoryAction(actionHistoryId).Rows[0];
+                CompletedAction completedAction = new CompletedAction
+                {
+                    ActionHistoryId = Convert.ToInt32(row[0]),
+                    Action = GetAction(Convert.ToInt32(row[1])),
+                    Comments = GetAllComments(actionHistoryId),
+                    CompletedByEmail = row[4].ToString(),
+                    CompletedOn = Convert.ToDateTime(row[3]),
+                    ExecutionSucces = Convert.ToBoolean(row[5]),
+                    DateToExecute = Convert.ToDateTime(row[2])
+                };                
+            return completedAction;
+        }
+
         #endregion
     }
 }
