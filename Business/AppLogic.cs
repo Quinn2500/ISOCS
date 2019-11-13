@@ -10,7 +10,9 @@ namespace Business
 {
     public class AppLogic
     {
-        readonly DataBaseCallsApp _dataBaseCallsApp = new DataBaseCallsApp();
+        private readonly DataBaseCallsApp _dataBaseCallsApp = new DataBaseCallsApp();
+        private readonly DatabaseCallsNotifications _databaseCallsNotifications = new DatabaseCallsNotifications();
+        private readonly EmailLogic _emailLogic = new EmailLogic();
 
 
         #region Certificate
@@ -96,13 +98,8 @@ namespace Business
         public void CreateActionInDatabase(ActionModel actionModel, string certificateName, string companyName)
         {
             _dataBaseCallsApp.SaveAction(actionModel, certificateName, companyName);
-            _dataBaseCallsApp.SaveActionToComplete(GetActionId(actionModel.Name, companyName, certificateName), actionModel.StartDate);
-        }
-
-        public void CreateActionToExecute(ActionToComplete actionToComplete, string certificateName, string companyName)
-        {
-
-            _dataBaseCallsApp.SaveActionToComplete(GetActionId(actionToComplete.Action.Name, companyName, certificateName), actionToComplete.DateToExecute);
+            int id = _dataBaseCallsApp.SaveActionToComplete(GetActionId(actionModel.Name, companyName, certificateName), actionModel.StartDate).GetValueOrDefault();
+            _databaseCallsNotifications.CreateActionHistoryToken(id, Guid.NewGuid().ToString());
         }
 
         public ActionToComplete GetActionToComplete(string actionName, string certificateName, string companyName)
@@ -117,6 +114,20 @@ namespace Business
 
             return result;
         }
+
+        public ActionToComplete GetActionToComplete(int actionid)
+        {
+            DataTable dataTable = _dataBaseCallsApp.GetAllFromActionToExecute(actionid);
+            ActionToComplete result = new ActionToComplete
+            {
+                Action = GetAction(actionid),
+                DateToExecute = Convert.ToDateTime(dataTable.Rows[0][2]),
+                Comments = GetAllComments(Convert.ToInt32(dataTable.Rows[0][0]))
+            };
+
+            return result;
+        }
+
 
         private List<CommentModel> GetAllComments(int actionHistoryId)
         {
@@ -142,6 +153,9 @@ namespace Business
             ActionToComplete action = GetActionToComplete(actioName, certificateName, userThatCompleted.CompanyName);
             int actionHistoryId = _dataBaseCallsApp.GetRecentActionHistoryId(actionId);
             _dataBaseCallsApp.ExecuteAction(actionHistoryId, executionSucces, userThatCompleted.Email, DateTime.Now);
+            CompletedAction completedAction = GetCompletedAction(actionHistoryId);
+            _emailLogic.SendActionCompletedEmail(completedAction);
+            _databaseCallsNotifications.DeleteActionHistoryToken(actionHistoryId);
             DateTime newDateToExecute;
             switch (action.Action.Occurence)
             {
@@ -170,7 +184,8 @@ namespace Business
                 _dataBaseCallsApp.DeleteHistoryAction(_dataBaseCallsApp.GetOldestHistoryEntry(actionId));
             }
 
-            _dataBaseCallsApp.SaveActionToComplete(actionId, newDateToExecute);
+            int id = _dataBaseCallsApp.SaveActionToComplete(actionId, newDateToExecute).GetValueOrDefault();
+            _databaseCallsNotifications.CreateActionHistoryToken(id, Guid.NewGuid().ToString());
         }
 
         private bool CheckHistoryCount(int actionId)
@@ -190,6 +205,7 @@ namespace Business
             foreach (DataRow row in _dataBaseCallsApp.GetAllHistoryActionsId(id).Rows)
             {
                 _dataBaseCallsApp.DeleteAllCommentsFromHistoryAction(Convert.ToInt32(row[0].ToString()));
+                _databaseCallsNotifications.DeleteActionHistoryToken(Convert.ToInt32(row[0].ToString()));
             }
             _dataBaseCallsApp.DeleteActionWithId(id);
             _dataBaseCallsApp.DeleteAllActionHistory(id);

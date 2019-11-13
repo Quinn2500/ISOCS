@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using Business;
 using DataModels;
 using DAL;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -11,6 +12,9 @@ namespace UnitTests
     public class UnitTest1
     {
         private DatabaseCallsAdmin DatabaseCallsAdmin = new DatabaseCallsAdmin();
+
+        private EmailLogic test = new EmailLogic();
+
         [TestMethod]
         public void TestMethod1()
         {
@@ -55,8 +59,7 @@ namespace UnitTests
         [TestMethod]
         public void TestDB()
         {
-            DataBaseCallsApp callsApp = new DataBaseCallsApp();
-            callsApp.test();
+            test.RenderRazorViewToString();
         }
     }
 }

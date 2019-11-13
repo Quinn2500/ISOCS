@@ -121,3 +121,5 @@ D:\GitKraken\Repos\ISOCS\UnitTests\bin\Debug\DataModels.dll
 D:\GitKraken\Repos\ISOCS\UnitTests\bin\Debug\Microsoft.Extensions.Identity.Stores.dll
 D:\GitKraken\Repos\ISOCS\UnitTests\bin\Debug\DataModels.pdb
 D:\GitKraken\Repos\ISOCS\UnitTests\bin\Debug\Microsoft.Extensions.Identity.Stores.xml
+D:\GitKraken\Repos\ISOCS\UnitTests\bin\Debug\Business.dll
+D:\GitKraken\Repos\ISOCS\UnitTests\bin\Debug\Business.pdb

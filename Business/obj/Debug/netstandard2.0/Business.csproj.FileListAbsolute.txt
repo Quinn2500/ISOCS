@@ -14,3 +14,5 @@ D:\GitKraken\Repos\ISOCS\Business\obj\Debug\netstandard2.0\Business.csproj.CopyC
 D:\GitKraken\Repos\ISOCS\Business\obj\Debug\netstandard2.0\Business.dll
 D:\GitKraken\Repos\ISOCS\Business\obj\Debug\netstandard2.0\Business.pdb
 D:\GitKraken\Repos\ISOCS\Business\obj\Debug\netstandard2.0\Business.csproj.CoreCompileInputs.cache
+D:\GitKraken\Repos\ISOCS\Business\bin\Debug\netstandard2.0\Microsoft.AspNetCore.Mvc.Razor.dll
+D:\GitKraken\Repos\ISOCS\Business\bin\Debug\netstandard2.0\Microsoft.AspNetCore.Mvc.Razor.xml

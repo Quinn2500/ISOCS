@@ -2962,6 +2962,30 @@
           "lib/netstandard2.0/Pomelo.JsonObject.dll": {}
         }
       },
+      "RazorLight_wik8wz/2.0.0": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.AspNetCore.Hosting.Abstractions": "2.0.0",
+          "Microsoft.AspNetCore.Html.Abstractions": "2.0.0",
+          "Microsoft.AspNetCore.Mvc.Razor.Extensions": "2.0.0",
+          "Microsoft.AspNetCore.Razor.Language": "2.0.0",
+          "Microsoft.AspNetCore.Razor.Runtime": "2.0.0",
+          "Microsoft.CodeAnalysis.Razor": "2.0.0",
+          "Microsoft.Extensions.Caching.Abstractions": "2.0.0",
+          "Microsoft.Extensions.Caching.Memory": "2.0.0",
+          "Microsoft.Extensions.DependencyInjection": "2.0.0",
+          "Microsoft.Extensions.DependencyModel": "2.0.3",
+          "Microsoft.Extensions.FileProviders.Physical": "2.0.0",
+          "Microsoft.Extensions.Primitives": "2.0.0",
+          "System.Buffers": "4.4.0"
+        },
+        "compile": {
+          "lib/netstandard2.0/RazorLight.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/RazorLight.dll": {}
+        }
+      },
       "Remotion.Linq/2.2.0": {
         "type": "package",
         "dependencies": {
@@ -5188,7 +5212,8 @@
         "framework": ".NETStandard,Version=v2.0",
         "dependencies": {
           "DAL": "1.0.0",
-          "DataModels": "1.0.0"
+          "DataModels": "1.0.0",
+          "RazorLight_wik8wz": "2.0.0"
         },
         "compile": {
           "bin/placeholder/Business.dll": {}
@@ -8737,6 +8762,19 @@
         "lib/netstandard2.0/Pomelo.JsonObject.dll",
         "pomelo.jsonobject.2.2.0.nupkg.sha512",
         "pomelo.jsonobject.nuspec"
+      ]
+    },
+    "RazorLight_wik8wz/2.0.0": {
+      "sha512": "vE5NKXsWWLz83OhouuMTAhg1a2x9IWfyLC1AitIRFbs07dJm3PqKcJ/tkGoIdopumSXQho6rihaptTzjB4XYJw==",
+      "type": "package",
+      "path": "razorlight_wik8wz/2.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE.txt",
+        "lib/netstandard2.0/RazorLight.dll",
+        "razorlight_wik8wz.2.0.0.nupkg.sha512",
+        "razorlight_wik8wz.nuspec"
       ]
     },
     "Remotion.Linq/2.2.0": {

@@ -158,7 +158,7 @@ namespace DAL
             return _databaseCalls.Select(query, parameters);
         }
 
-        public void SaveActionToComplete(int actionId, DateTime dateToExecute)
+        public int? SaveActionToComplete(int actionId, DateTime dateToExecute)
         {
             string query = "INSERT INTO `actionhistory` (`actionID`, `dateToExecute`) VALUES (@pActionId , @pDateToExecute);";
             List<MySqlParameter> parameters = new List<MySqlParameter>
@@ -166,7 +166,7 @@ namespace DAL
                 new MySqlParameter("@pActionId", actionId),
                 new MySqlParameter("@pDateToExecute", dateToExecute)
             };
-            _databaseCalls.Command(query, parameters);
+            return _databaseCalls.CommandWithLastId(query, parameters);
 
 
         }
