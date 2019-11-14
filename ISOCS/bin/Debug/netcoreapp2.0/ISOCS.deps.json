@@ -1,7 +1,7 @@
 {
   "runtimeTarget": {
     "name": ".NETCoreApp,Version=v2.0",
-    "signature": "e7e1c75c03410d01bb0ae3397ca745ff6ab3a870"
+    "signature": "d1fc365e56e7ae1aefdd16e95e3bf4ca2f832310"
   },
   "compilationOptions": {
     "defines": [
@@ -3104,6 +3104,32 @@
           "lib/netstandard2.0/Pomelo.JsonObject.dll": {}
         }
       },
+      "RazorLight_wik8wz/2.0.0": {
+        "dependencies": {
+          "Microsoft.AspNetCore.Hosting.Abstractions": "2.0.3",
+          "Microsoft.AspNetCore.Html.Abstractions": "2.0.2",
+          "Microsoft.AspNetCore.Mvc.Razor.Extensions": "2.0.3",
+          "Microsoft.AspNetCore.Razor.Language": "2.0.3",
+          "Microsoft.AspNetCore.Razor.Runtime": "2.0.3",
+          "Microsoft.CodeAnalysis.Razor": "2.0.3",
+          "Microsoft.Extensions.Caching.Abstractions": "2.2.0",
+          "Microsoft.Extensions.Caching.Memory": "2.2.0",
+          "Microsoft.Extensions.DependencyInjection": "2.2.0",
+          "Microsoft.Extensions.DependencyModel": "2.0.3",
+          "Microsoft.Extensions.FileProviders.Physical": "2.0.1",
+          "Microsoft.Extensions.Primitives": "2.2.0",
+          "System.Buffers": "4.4.0"
+        },
+        "runtime": {
+          "lib/netstandard2.0/RazorLight.dll": {
+            "assemblyVersion": "2.0.0.0",
+            "fileVersion": "2.0.0.0"
+          }
+        },
+        "compile": {
+          "lib/netstandard2.0/RazorLight.dll": {}
+        }
+      },
       "Remotion.Linq/2.2.0": {
         "dependencies": {
           "System.Collections": "4.3.0",
@@ -4866,7 +4892,8 @@
       "Business/1.0.0": {
         "dependencies": {
           "DAL": "1.0.0",
-          "DataModels": "1.0.0"
+          "DataModels": "1.0.0",
+          "RazorLight_wik8wz": "2.0.0"
         },
         "runtime": {
           "Business.dll": {}
@@ -6368,6 +6395,13 @@
       "sha512": "sha512-dfe8owsB+u9amQhZHKCPy2YiIt9tK4iX3dBoSwKlNd2cbi7Yh38XU93LjlYVJ+8HhxS9UgDoUbhYEt3jXTxBRQ==",
       "path": "pomelo.jsonobject/2.2.0",
       "hashPath": "pomelo.jsonobject.2.2.0.nupkg.sha512"
+    },
+    "RazorLight_wik8wz/2.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-vE5NKXsWWLz83OhouuMTAhg1a2x9IWfyLC1AitIRFbs07dJm3PqKcJ/tkGoIdopumSXQho6rihaptTzjB4XYJw==",
+      "path": "razorlight_wik8wz/2.0.0",
+      "hashPath": "razorlight_wik8wz.2.0.0.nupkg.sha512"
     },
     "Remotion.Linq/2.2.0": {
       "type": "package",

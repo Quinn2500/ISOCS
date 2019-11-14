@@ -36,6 +36,7 @@ namespace ISOCS
 
             // Add application services.
             services.AddTransient<IEmailSender, EmailSender>();
+            services.AddScoped<IViewRenderService, ViewRenderService>();
 
             services.AddMvc();
         }
