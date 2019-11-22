@@ -1,0 +1,35 @@
+﻿@model ISOCS.Models.NotificationViewModels.ExecuteTaskNotificationViewModel
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>ExecuteTask</title>
+</head>
+<body>
+@if (Model.IsSucces)
+{
+    <div>
+        <h1>Succes!</h1>
+        <p>@Model.FirstName, je hebt succesvol de volgende gegevens ingevoerd:</p>
+        <ul>
+            <li>Actie Naam: @Model.ActionName</li>
+            <li>Certificaat Naam: @Model.CertificateName</li>
+            @if(@Model.ExecutionSucces){<li>De taak succesvol uitgevoerd.</li>}
+            else {<li> De taak niet succesvol uitgevoerd. </li>}
+        </ul>
+    </div>    
+}
+else
+{
+    <div>
+        <h1>Mislukt!</h1>
+        <p>Helaas, is het verwerken van uw keuze niet helemaal gelukt. Probeer het opnieuw of <a asp-controller="Account" asp-action="Login">log in</a> en probeer het via de site zelf.</p>
+    </div>
+}
+</body>
+</html>

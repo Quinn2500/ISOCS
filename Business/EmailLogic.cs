@@ -13,75 +13,25 @@ namespace Business
 {
     public class EmailLogic
     {
-        SmtpClient server = new SmtpClient("smtp.gmail.com")
+        private readonly SmtpClient _smtpClient = new SmtpClient
         {
+            Host = "smtp.gmail.com",
             Port = 587,
-            Credentials = new System.Net.NetworkCredential("spotifyfree886@gmail.com", "Pony1234"),
-            EnableSsl = true
+            EnableSsl = true,
+            DeliveryMethod = SmtpDeliveryMethod.Network,
+            UseDefaultCredentials = false,
+            Credentials = new NetworkCredential("spotifyfree886@gmail.com", "Pony1234@")
         };
 
-        /*
-        public void inviteUser(string emailadres)
+        public void SendEmail(string title, string body, string receiver)
         {
-            MailMessage mail = new MailMessage();
-            mail.From = new MailAddress("spotifyfree886@gmail.com");
-            mail.To.Add(emailadres);
-            mail.Subject = "Test";
-            mail.Body = "Mooie test";
-            server.Send(mail);
-        }
-        */
-
-        public void Send3DayNotificationEmail(ActionToComplete action)
-        {
-
-        }
-
-        public void SendTodayNotificationEmail(ActionToComplete action, string token, int actionHistoryId)
-        {
-
-        }
-
-        public void SendActionCompletedEmail(CompletedAction action)
-        {
-
-        }
-
-        public void SendUncompletedTaskEmail(ActionToComplete action)
-        {
-
-        }
-
-        private void SendEmail(string body, string receiver)
-        {
-            SmtpClient smtp = new SmtpClient
-            {
-                Host = "smtp.gmail.com",
-                Port = 587,
-                EnableSsl = true,
-                DeliveryMethod = SmtpDeliveryMethod.Network,
-                UseDefaultCredentials = false,
-                Credentials = new NetworkCredential("spotifyfree886@gmail.com", "Pony1234@")
-            };
-
             using (var message = new MailMessage("spotifyfree886@gmail.com", receiver))
             {
-                message.Subject = "Test";
+                message.Subject = title;
                 message.Body = body;
                 message.IsBodyHtml = true;
-                smtp.Send(message);
+                _smtpClient.Send(message);
             }
-        }
-
-        public async void RenderRazorViewToString()
-        {
-            var engine = new RazorLightEngineBuilder()
-                .UseMemoryCachingProvider()
-                .Build();
-
-            string template = "Hello, @Model.Name. Welcome to RazorLight repository";
-
-            string result = await engine.CompileRenderAsync("templateKey", template, new { Name = "John Doe" });
         }
     }
 }

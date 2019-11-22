@@ -13,62 +13,15 @@ namespace Business
 
         private readonly AppLogic _appLogic = new AppLogic();
 
-        private readonly EmailLogic _emailLogic = new EmailLogic();
-
-
-        public void DailyChecks()
-        {
-            Send3DayNotifications();
-            SendTodayNotifications();
-            SendUncompletedTaskNotifications();
-            CheckActionTokens();
-        }
-
-        public void Send3DayNotifications()
-        {
-            foreach (int id in Check3DayNotifications())
-            {
-                ActionToComplete action = _appLogic.GetActionToComplete(_databaseCallsNotifications.GetActionIdFromHistoryAction(id));
-                _emailLogic.Send3DayNotificationEmail(action);
-            }
-        }
-
-        public void SendTodayNotifications()
-        {
-            foreach (int id in CheckTodayNotifications())
-            {
-                ActionToComplete action =
-                    _appLogic.GetActionToComplete(_databaseCallsNotifications.GetActionIdFromHistoryAction(id));
-                string token = _databaseCallsNotifications.GetActionHistoryToken(id);
-                _emailLogic.SendTodayNotificationEmail(action, token, id);
-            }
-        }
-
-        public void SendUncompletedTaskNotifications()
-        {
-            foreach (int id in CheckNotCompletedTasks())
-            {
-                ActionToComplete action = _appLogic.GetActionToComplete(_databaseCallsNotifications.GetActionIdFromHistoryAction(id));
-                _emailLogic.SendUncompletedTaskEmail(action);
-            }
-        }
-
         public void CheckActionTokens()
         {
             DateTime dateToDelete = DateTime.Today.AddDays(-1);
             _databaseCallsNotifications.DeleteActionHistoryToken(dateToDelete);
         }
 
-        public bool ExecuteTask(string token, int actionHistoryId, string actionName,string certificateName ,bool executionSucces, ApplicationUser user)
+        public void ExecuteTask(string actionName,string certificateName ,bool executionSucces, ApplicationUser user)
         {
-            string dbToken = _databaseCallsNotifications.GetActionHistoryToken(actionHistoryId);
-            if (!dbToken.Equals(token))
-            {
-                return false;
-            }
-
             _appLogic.CompleteAction(executionSucces, actionName, certificateName, user);
-            return true;
         }
 
         private List<int> GetUnexecutedHistoryActionIds(DateTime dateToNotify)
@@ -82,25 +35,41 @@ namespace Business
             return result;
         }
 
-        private List<int> Check3DayNotifications()
+        public List<int> Check3DayNotifications()
         {
             DateTime todayDate = DateTime.Today;
             DateTime dateToNotify = todayDate.AddDays(3);
             return GetUnexecutedHistoryActionIds(dateToNotify);
         }
 
-        private List<int> CheckTodayNotifications()
+        public List<int> CheckTodayNotifications()
         {
             DateTime dateToNotify = DateTime.Today;
             return GetUnexecutedHistoryActionIds(dateToNotify);
         }
 
-        private List<int> CheckNotCompletedTasks()
+        public List<int> CheckNotCompletedTasks()
         {
             DateTime todayDate = DateTime.Today;
             DateTime dateToNotify = todayDate.AddDays(-1);
             return GetUnexecutedHistoryActionIds(dateToNotify);
         }
 
+        public ActionToComplete GetAction(int actionHistoryId)
+        {
+            int id = _databaseCallsNotifications.GetActionIdFromHistoryAction(actionHistoryId);
+            return _appLogic.GetActionToComplete(id);
+        }
+
+        public string GetToken(int actionHistoryId)
+        {
+           return _databaseCallsNotifications.GetActionHistoryToken(actionHistoryId);
+        }
+
+        public string GetCertificateResponsibleUserEmail(int actionHistoryId)
+        {
+            int actionId = _databaseCallsNotifications.GetActionIdFromHistoryAction(actionHistoryId);
+            return _databaseCallsNotifications.GetCertificateResponsible(actionId);
+        }
     }
 }

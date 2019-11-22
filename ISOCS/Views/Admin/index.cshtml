@@ -5,6 +5,7 @@
 @{
     ViewData["Title"] = "index";
     Layout = null;
+
 }
 
 <!DOCTYPE html>
@@ -36,86 +37,90 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col" align="center" style="background-color: lightgray; margin-top: 40px; padding: 10px; border-radius: 10px;">
-                <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Zoek gebruikers">
-                <table id="myTable" class="table table-hover">
-                    <thead>
-                        <tr>
-                            <th scope="col">Email</th>
-                            <th scope="col">Voornaam</th>
-                            <th scope="col">Tussenvoegsel</th>
-                            <th scope="col">Achternaam</th>
-                            <th scope="col">Admin</th>
-                            <th scope="col">Manager</th>
-                            <th scope="col">Employee</th>
-                            <th scope="col"></th>
-                            <th scope="col"></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (ApplicationUser user in ViewBag.UsersFromCompany)
-                        {
-                            string role = UserManager.GetRolesAsync(user).Result[0].ToLower();
-                            <tr class="table table-bordered table-info">
-                                <td class="Email">@user.Email</td>
-                                <td>@user.Firstname</td>
-                                <td>@user.Preposition</td>
-                                <td>@user.Lastname</td>
-                                <td>
-                                    <div class="radio">
-                                        <label><input type="radio" id='admin' name="@user.Email" checked="@(role.Equals("admin"))">Admin</label>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="radio">
-                                        <label><input type="radio" id='manager' name="@user.Email" checked="@role.Equals("manager"))">Manager</label>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="radio">
-                                        <label><input type="radio" id='employee' name="@user.Email" checked="@(role.Equals("employee"))">Employee</label>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="">
-                                        <button type="button" onclick="javascript: deleteUser();" class="btn">Delete</button>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="">
-                                        <button type="button" class="btn btn-success">Pas gebruiker aan</button>
-                                    </div>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
-            <!-- Button trigger modal -->
-            <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#modelInviteUser">Open Modal</button>
-
-            <!-- Modal -->
-            <div class="modal fade" id="modelInviteUser" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-                 aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header text-center">
-                            <h4 class="modal-title w-100 font-weight-bold">Voer emailadres in:</h4>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="md-form mb-5">
-                                <div id="reqs">
-                                    <h3>Gebruikers om uit te nodigen</h3>
-                                    <button class="btn btn-success" type="button" value="Add" onclick="javascript:add();">Add</button>
-                                    <br>
-                                </div>
+                <div class ="form-row">
+                    <div class="form-group col-12">
+                        <input class="form-control" type="text" id="myInput" onkeyup="searchFuntion()" placeholder="Zoek gebruikers">
+                        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modelInviteUser">Nodig gebruikers uit!</button>
+                    </div>                  
+                </div>
+                
+                
+                <div class="modal fade" id="modelInviteUser" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                     aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header text-center">
+                                <h4 class="modal-title w-100 font-weight-bold">Voer emailadres(sen) in:</h4>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
                             </div>
-                            <button onclick="javascript: submitEmailAdresses();">Nodig Uit!</button>
+                            <div class="modal-body">
+                                <div class="md-form mb-5">
+                                    <div id="reqs">
+                                        <h3>Gebruikers om uit te nodigen</h3>
+                                        <button class="btn btn-success" type="button" value="Add" onclick="javascript:add();">Voeg toe!</button>
+                                        <br>
+                                    </div>
+                                </div>
+                                <button class="btn btn-success" onclick="javascript: submitEmailAdresses();">Nodig Uit!</button>
+                            </div>
                         </div>
                     </div>
                 </div>
+
+                <table id="myTable" class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th scope="col">Email</th>
+                        <th scope="col">Voornaam</th>
+                        <th scope="col">Tussenvoegsel</th>
+                        <th scope="col">Achternaam</th>
+                        <th scope="col">Admin</th>
+                        <th scope="col">Manager</th>
+                        <th scope="col">Employee</th>
+                        <th scope="col"></th>
+                        <th scope="col"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @foreach (ApplicationUser user in ViewBag.UsersFromCompany)
+                    {
+                        string role = UserManager.GetRolesAsync(user).Result[0].ToLower();
+                        <tr class="table table-bordered table-info">
+                            <td class="Email">@user.Email</td>
+                            <td>@user.Firstname</td>
+                            <td>@user.Preposition</td>
+                            <td>@user.Lastname</td>
+                            <td>
+                                <div class="radio">
+                                    <label><input type="radio" id='admin' onclick="javascript: changeRole('Admin', this.name);" name="@user.Email" checked="@role.Equals("admin")">Admin</label>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="radio">
+                                    <label><input type="radio" id='manager' onclick="javascript: changeRole('Manager', this.name);" name="@user.Email" checked="@role.Equals("manager")">Manager</label>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="radio">
+                                    <label><input type="radio" id='employee' onclick="javascript: changeRole('Employee', this.name);" name="@user.Email" checked="@role.Equals("employee")">Employee</label>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="">
+                                    <button type="button" onclick="javascript: deleteUser();" class="btn btn-danger">Delete</button>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="">
+                                    <button type="button" class="btn btn-success">Pas gebruiker aan</button>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
             </div>
 
             <div class="modal fade" id="modalDeleteUser" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
@@ -128,16 +133,13 @@
                         <div class="modal-body">
                             <div class="md-form mb-5">
                                 <p id="modalText"></p>
-                                <button onclick="javascript: confirmDelete();" class="btn btn-primary">Yes - Delete this User</button>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">Cancel</span>
-                                </button>
+                                <button onclick="javascript: confirmDelete();" class="btn btn-danger">Yes - Verwijder de gebruiker</button>
+                                <button type="button" class="close btn btn-success" data-dismiss="modal" aria-label="Close">Nee - Behoud de gebruiker</button>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-
 
         </div>
     </div>
@@ -176,15 +178,14 @@
 
         reqs_id++;
 
-        //create textbox
         let input = document.createElement('input');
         input.type = "text";
-        input.setAttribute("class", "inputs");
+        input.setAttribute("class", "form-control");
+        input.setAttribute("placeholder", "Voer emailadres in:");
         input.setAttribute('id', 'reqs' + reqs_id);
         input.setAttribute('value', reqs_id);
         let reqs = document.getElementById("reqs");
 
-        //create remove button
         let remove = document.createElement('button');
         remove.setAttribute('id', 'reqsr' + reqs_id);
         remove.onclick = function(e) {
@@ -192,17 +193,15 @@
         };
         remove.setAttribute("type", "button");
         remove.innerHTML = "Remove";
-        remove.setAttribute("class", "btn-danger");
+        remove.setAttribute("class", "btn btn-danger");
 
-        //append elements
         reqs.appendChild(input);
         reqs.appendChild(remove);
         let br = document.createElement("br");
         reqs.appendChild(br);
     }
 
-    //ZoekFunctie
-    function myFunction() {
+    function searchFuntion() {
         var input, filter, table, tr, td, i, txtValue;
         input = document.getElementById("myInput");
         filter = input.value.toUpperCase();
@@ -229,7 +228,6 @@
         $('#modalDeleteUser').modal('show');
 
     }
-
 
     function confirmDelete() {
         var id = $('#modalText').text();
@@ -276,6 +274,20 @@
     function validateEmail(email) {
         var re = /^(([^<>()[\]\\.,;:\s@@\"]+(\.[^<>()[\]\\.,;:\s@@\"]+)*)|(\".+\"))@@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         return re.test(email);
+    }
+
+    function changeRole(role, userEmail) {
+        $.ajax({
+            async: false,
+            type: "POST",
+            global: false,
+            dataType: 'json',
+            url: '@Url.Action("UpdateUserRole", "Admin")',
+            data: { 'role': role, 'userEmail': userEmail },
+            success: function(data) {
+                console.log(data);
+            }
+        });
     }
 </script>
 

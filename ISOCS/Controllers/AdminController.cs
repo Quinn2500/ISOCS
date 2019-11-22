@@ -13,11 +13,15 @@ namespace ISOCS.Controllers
     [Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {
-        private readonly UserManager<ApplicationUser> _userManager;
+        private  UserManager<ApplicationUser> _userManager;
+        private  RoleManager<IdentityRole> _roleManager;
         private readonly AdminLogic _adminLogic = new AdminLogic();
 
-        public AdminController( UserManager<ApplicationUser> userManager)
-        { _userManager = userManager;}
+        public AdminController(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
+        {
+            _userManager = userManager;
+            _roleManager = roleManager;
+        }
 
         [HttpGet]
         public async Task<IActionResult> Index()
@@ -49,6 +53,18 @@ namespace ISOCS.Controllers
         {
           
             return RedirectToAction(nameof(Index), "Admin");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateUserRole(string role, string userEmail)
+        {
+            ApplicationUser user = await _userManager.FindByEmailAsync(userEmail);
+            string currentRoleString = _userManager.GetRolesAsync(user).Result[0];           
+            await _userManager.RemoveFromRoleAsync(user, currentRoleString);
+            await _userManager.AddToRoleAsync(user, role);
+
+            return Ok();
+
         }
 
     }

@@ -34,7 +34,7 @@ namespace DAL
 
         public string GetActionHistoryToken(int actionHistoryid)
         {
-            string query = "SELECT actiontokens.tokens FROM `actiontokens` WHERE actiontokens.actionHistoryID = @pId";
+            string query = "SELECT actiontokens.token FROM `actiontokens` WHERE actiontokens.actionHistoryID = @pId";
             List<MySqlParameter> parameters = new List<MySqlParameter>
             {
                 new MySqlParameter("@pId", actionHistoryid)

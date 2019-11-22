@@ -1,0 +1,23 @@
+﻿@model ISOCS.Models.NotificationViewModels.NotCompletedEmailManagerViewModel
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>UncompletedTaskManager</title>
+</head>
+<body>
+<div class="row">
+    <p>Beste, @Model.FirstNameManager</p>
+    <p>Deze mail krijgt u omdat  de handeling: @Model.ActionName voor het certificaat: @Model.CertificateName uitgevoerd had moeten zijn. Dit was dan op: @Model.DateToExecute.DayOfWeek , @Model.DateToExecute.Date</p>
+    <p>@Model.FullnameEmployee is verantwoordelijk voor deze taak. Het email adres wat bekend is bij ons is als volgt: @Model.EmailEmployee</p>
+    <p>De omschrijving voor de desbetreffende handeling is als volgt:</p>
+    <p>@Model.Description</p>
+    <p>Gelieve dit probleem zo snel mogelijk</p>
+</div>
+</body>
+</html>

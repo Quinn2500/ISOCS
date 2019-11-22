@@ -1,8 +1,5 @@
 ﻿@using ISOCS.Models.NotificationViewModels
-@model TestViewModel
-@{
-    Layout = null;
-}
+@model ExecuteTaskMailViewModel
 
 <!DOCTYPE html>
 
@@ -12,6 +9,19 @@
     <title>ExecuteEmail</title>
 </head>
 <body>
-    <p>@Model.Title</p>
+<div class="row">
+    <p>Beste, @Model.FirstName</p>
+    <p>Deze mail krijgt u omdat vandaag de handeling: @Model.Name uitgevoerd moet worden.</p>
+    <p>De omschrijving voor de desbetreffende handeling als volgt:</p>
+    <p>@Model.Description</p>
+</div>
+
+<div class="row">
+    <p>Door op een van de volgende knoppen te drukken kunt u de handeling uitvoeren. Moet u een bestand uploaden of wilt u comment plaatsen log dan <a asp-controller="Account" asp-action="Login">hier</a> in</p>
+    <div>
+        <a class="btn btn-success" asp-protocol="https" asp-route-executionSucces="@true" asp-route-userEmail="@Model.UserEmail" asp-route-actionHistoryId="@Model.ActionId" asp-route-token="@Model.Token" asp-route-actionName="@Model.Name" asp-route-certificateName="@Model.CertificateName" asp-controller="Notification" asp-action="ExecuteTask">Taak is succesvol uitgevoerd!</a>
+        <a class="btn btn-danger" asp-protocol="https" asp-route-executionSucces="@false" asp-route-userEmail="@Model.UserEmail" asp-route-actionHistoryId="@Model.ActionId" asp-route-token="@Model.Token" asp-route-actionName="@Model.Name" asp-route-certificateName="@Model.CertificateName" asp-controller="Notification" asp-action="ExecuteTask">Taak is niet gelukt.</a>
+    </div>
+</div>
 </body>
 </html>

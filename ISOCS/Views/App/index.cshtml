@@ -1,11 +1,83 @@
 ﻿@using DataModels
-@inject UserManager<ApplicationUser> UserManager
+@using ISOCS.Models.AppViewModel
+@model AppIndexViewModel
 @{
     ViewData["Title"] = "index";
     Layout = "~/Views/Shared/appLayout.cshtml";
+
 }
 
-<h2>Rol: @ViewBag.userRole </h2>
+<html>
+    <head>
 
-<a class="btn btn-success" asp-area="" asp-controller="App" asp-action="ActionOverview">Voeg een taak toe</a>
+    </head>
+    <body>
+    <div>
+        @{
+            int time = DateTime.Now.Hour;
+            if (time >= 4 && time <= 11)
+             {
+                 <h1>Goedemorgen, @Model.FirstName</h1>
+             }
+             else if (time >= 12 && time <= 16)
+             {
+                 <h1>Goedemiddag, @Model.FirstName</h1>
+             }
+             else if (time >= 17 && time <= 3)
+             {
+                 <h1>Goedenavond, @Model.FirstName</h1>
+             }
+        }
+    </div>
+    <div>
+        <h1>Aankomende Taken:</h1>
+        @if (Model.ActionsToComplete.Count == 0)
+        {
+            <p>Momenteel zijn er geen taken beschikbaar of aangemaakt.</p>
+        }
+        @foreach (ActionToComplete action in Model.ActionsToComplete)
+        {
+            if (action.DateToExecute < DateTime.Today)
+            {
+                <h3>Had al uitgevoerd moeten zijn:</h3>
+                <div style="border-radius: 20px; border-style: solid;">
+                    <p>@action.Action.CertificateName - @action.Action.Name - @action.DateToExecute</p>
+                </div>
+            }
+
+            if (action.DateToExecute == DateTime.Today)
+            {
+                <h3>Vandaag uit te voeren:</h3>
+                <div style="border-radius: 20px; border-style: solid;">
+                    <p>@action.Action.CertificateName - @action.Action.Name - @action.DateToExecute</p>
+                </div>
+            }
+
+            if (action.DateToExecute == DateTime.Today.AddDays(1))
+            {
+                <h3>Morgen uit te voeren:</h3>
+                <div style="border-radius: 20px; border-style: solid;">
+                    <p>@action.Action.CertificateName - @action.Action.Name - @action.DateToExecute</p>
+                </div>
+            }
+
+            if (action.DateToExecute <= DateTime.Today.AddDays(7))
+            {
+                <h3>In de aankomende week uit te voeren:</h3>
+                <div style="border-radius: 20px; border-style: solid;">
+                    <p>@action.Action.CertificateName - @action.Action.Name - @action.DateToExecute</p>
+                </div>
+            }
+
+            if (action.DateToExecute > DateTime.Today.AddDays(7))
+            {
+                <h3>In de aankomende periode uit te voeren:</h3>
+                <div style="border-radius: 20px; border-style: solid;">
+                    <p>@action.Action.CertificateName - @action.Action.Name - @action.DateToExecute</p>
+                </div>
+            }
+        }
+    </div>
+    </body>
+</html>
 

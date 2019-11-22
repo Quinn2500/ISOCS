@@ -1,0 +1,21 @@
+﻿@model ISOCS.Models.NotificationViewModels.ThreeDayNotificationViewModel
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>ThreeDayNotification</title>
+</head>
+<body>
+<div class="row">
+    <p>Beste, @Model.FirstName</p>
+    <p>Deze mail krijgt u omdat over 3 dagen de handeling: @Model.ActionName uitgevoerd moet worden. Dit is dan op: @Model.DateToExecute.DayOfWeek , @Model.DateToExecute.Date</p>
+    <p>De omschrijving voor de desbetreffende handeling als volgt:</p>
+    <p>@Model.Description</p>
+</div>
+</body>
+</html>

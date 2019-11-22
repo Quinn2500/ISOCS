@@ -28,9 +28,12 @@ namespace ISOCS.Controllers
         public async Task<IActionResult> Index()
         {
             ApplicationUser loggedInUser = await _userManager.FindByNameAsync(User.Identity.Name);
-            IList<string> roles = await _userManager.GetRolesAsync(loggedInUser);
-            ViewBag.userRole = roles[0];
-            return View();
+            AppIndexViewModel viewModel = new AppIndexViewModel
+            {
+                ActionsToComplete = _appLogic.GetFiveComingActionsForUser(loggedInUser.Email),
+                FirstName = loggedInUser.Firstname
+            };
+            return View(viewModel);
         }
 
         [HttpGet]
@@ -296,6 +299,13 @@ namespace ISOCS.Controllers
             ApplicationUser loggedInUser = await _userManager.FindByNameAsync(User.Identity.Name);
             _appLogic.CompleteAction(executionSucces,actionName,certificateName,loggedInUser);
             return RedirectToAction("ActionOverview", new { actionName, certificateName });
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Employee,Manager")]
+        public async Task<IActionResult> UploadFile()
+        {
+
         }
     }
 }

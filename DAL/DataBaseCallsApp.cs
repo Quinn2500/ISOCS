@@ -267,5 +267,26 @@ namespace DAL
             };
             return _databaseCalls.Select(query, parameters);
         }
+
+        public string GetCertificateName(int certificateId)
+        {
+            string query = "SELECT certificate.name FROM `certificate` WHERE certificate.ID = @pCertificateId";
+            List<MySqlParameter> parameters = new List<MySqlParameter>
+            {
+                new MySqlParameter("@pCertificateId", certificateId)
+            };
+            return _databaseCalls.GetOneString(query, parameters);
+        }
+
+        public DataTable Get5ComingActionIdsForUser(string userEmail)
+        {
+            string query =
+                "SELECT actionhistory.actionID, actionhistory.dateToExecute FROM `usertoaction` INNER JOIN actionhistory on actionhistory.actionID = usertoaction.actionID WHERE usertoaction.userName = '@pUserEmail' AND actionhistory.executedOn IS NULL ORDER By actionhistory.dateToExecute ASC LIMIT 5";
+            List<MySqlParameter> parameters = new List<MySqlParameter>
+            {
+                new MySqlParameter("@pUserEmail", userEmail)
+            };
+            return _databaseCalls.Select(query, parameters);
+        }
     }
 }

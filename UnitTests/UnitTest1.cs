@@ -56,10 +56,5 @@ namespace UnitTests
             result.Add(e);
         }
 
-        [TestMethod]
-        public void TestDB()
-        {
-            test.RenderRazorViewToString();
-        }
     }
 }

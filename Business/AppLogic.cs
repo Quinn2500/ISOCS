@@ -153,8 +153,6 @@ namespace Business
             ActionToComplete action = GetActionToComplete(actioName, certificateName, userThatCompleted.CompanyName);
             int actionHistoryId = _dataBaseCallsApp.GetRecentActionHistoryId(actionId);
             _dataBaseCallsApp.ExecuteAction(actionHistoryId, executionSucces, userThatCompleted.Email, DateTime.Now);
-            CompletedAction completedAction = GetCompletedAction(actionHistoryId);
-            _emailLogic.SendActionCompletedEmail(completedAction);
             _databaseCallsNotifications.DeleteActionHistoryToken(actionHistoryId);
             DateTime newDateToExecute;
             switch (action.Action.Occurence)
@@ -253,9 +251,10 @@ namespace Business
                     StartDate = Convert.ToDateTime(dataRow[3]),
                     CreatedOn = Convert.ToDateTime(dataRow[4]),
                     CreatedByEmail = dataRow[5].ToString(),
+                    CertificateName = _dataBaseCallsApp.GetCertificateName(Convert.ToInt32(dataRow[6])),
                     Occurence = (OccurenceEnum)Enum.Parse(typeof(OccurenceEnum), dataRow[7].ToString(), true),
                     ResponsibleUserEmail = dataRow[8].ToString(),
-                    EnableNotifications = Convert.ToBoolean(dataRow[9].ToString())
+                    EnableNotifications = Convert.ToBoolean(dataRow[9].ToString())                   
                 };
                 result = actionModel;
             }
@@ -318,6 +317,16 @@ namespace Business
                     DateToExecute = Convert.ToDateTime(row[2])
                 };                
             return completedAction;
+        }
+
+        public List<ActionToComplete> GetFiveComingActionsForUser(string userMailAdress)
+        {
+            List<ActionToComplete> result = new List<ActionToComplete>();
+            foreach (DataRow row in _dataBaseCallsApp.Get5ComingActionIdsForUser(userMailAdress).Rows)
+            {
+                result.Add(GetActionToComplete(Convert.ToInt32(row[0])));
+            }
+            return result;
         }
 
         #endregion
