@@ -1,7 +1,146 @@
-﻿
+﻿@using DataModels
+@model ISOCS.Models.OwnerViewModels.IndexViewModel
+
 @{
-    ViewData["Title"] = "index";
+    Layout = null;
 }
 
-<h2>Owner pagina</h2>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <link href="~/css/bootstrap.css" rel="stylesheet" />
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js" integrity="sha384-xrRywqdh3PHs8keKZN+8zzc5TX0GRTLCcmivcbNJWm2rs5C8PRhcEn3czEjhAO9o" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div>
+    <table id="myTable" class="table table-hover">
+        <thead>
+        <tr>
+            <th scope="col">Bedrijfnaam:</th>
+            <th scope="col">Uitnodigcode:</th>
+            <th scope="col"></th>   
+            <th scope="col"></th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (CompanyModel company in Model.CompanyModels)
+        {
+            <tr class="table table-bordered table-info">
+                <td class="nr">@company.Name</td>
+                <td>@company.InviteCode</td>
+                <td>
+                    <button type="button" class="btnDelete btn btn-danger">Delete</button>
+                </td>
+            </tr>
+        }
+        </tbody>
+        
+        <div class="modal fade" id="modalDeleteCompany" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header text-center">
+                        <h4 class="modal-title w-100 font-weight-bold">Weet je het zeker?</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="md-form mb-5">
+                            <p>Wil het volgende bedrijf verwijderen:</p>
+                            <p id="modalText"></p>
+                            <button onclick="javascript: confirmDelete();" class="btn btn-danger">Yes - Verwijder het bedrijf</button>
+                            <button type="button" class="close btn btn-success" data-dismiss="modal" aria-label="Close">Nee - Behoud het bedrijf</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </table>
+
+    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modelAddCompany">Voeg bedrijf toe!</button>
+        
+    <div class="modal fade" id="modelAddCompany" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header text-center">
+                    <h4 class="modal-title w-100 font-weight-bold">Voer informatie in:</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="md-form mb-5">
+                        <div class="form-group">
+                            <label>Naam bedrijf:</label>
+                            <input class="form-control" type="text" id="txtinputName"/>
+                        </div>
+                        <div class="form-group">
+                            <label>Emailadres klant:</label>
+                            <input type="email" class="form-control" id="txtinputEmail"/>
+                        </div>
+                        <button class="btn btn-secondary" onclick="javascript: addCompany();" type="button">Voeg bedrijf toe!</button>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">Cancel</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+       
+        
+
+</div>
+</body>
+</html>
+
+<script>
+
+    $(".btnDelete").click(function() {
+        var $row = $(this).closest("tr");
+        var $text = $row.find(".nr").text();
+        console.log($row);
+        console.log($text);
+        $('#modalText').text($text);
+        $('#modalDeleteCompany').modal('show');
+    });
+
+    function confirmDelete() {
+        $.ajax({
+            async: false,
+            type: "POST",
+            global: false,
+            dataType: 'json',
+            url: '@Url.Action("DeleteCompany", "Owner")',
+            data: {
+                'name': $('#modalText').text()
+            },
+            success: function(data) {
+                console.log(data);               
+            }
+        });
+        $('#modalDeleteCompany').modal('hide');
+    };
+
+    function addCompany() {
+        $.ajax({
+            async: false,
+            type: "POST",
+            global: false,
+            dataType: 'json',
+            url: '@Url.Action("AddCompany", "Owner")',
+            data: {
+                'name': $("#txtinputName").val(),
+                'userEmail': $("#txtinputEmail").val()
+            },
+            success: function(data) {
+                console.log(data);               
+            }
+        });
+        $('#modelAddCompany').modal('hide');
+    }
+</script>
 

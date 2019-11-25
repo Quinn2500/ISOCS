@@ -7,7 +7,6 @@ namespace DataModels
     public class CompanyModel
     {
         public string Name { get; set; }
-        public DateTime OpeningTime { get; set; }
-        public DateTime ClosingTime { get; set; }
+        public string InviteCode { get; set; }
     }
 }

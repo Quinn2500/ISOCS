@@ -301,11 +301,6 @@ namespace ISOCS.Controllers
             return RedirectToAction("ActionOverview", new { actionName, certificateName });
         }
 
-        [HttpPost]
-        [Authorize(Roles = "Employee,Manager")]
-        public async Task<IActionResult> UploadFile()
-        {
 
-        }
     }
 }
