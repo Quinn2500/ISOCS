@@ -227,8 +227,10 @@ namespace Business
                     CreatedOn = Convert.ToDateTime(dataRow[4]),
                     CreatedByEmail = dataRow[5].ToString(),
                     Occurence = (OccurenceEnum)Enum.Parse(typeof(OccurenceEnum), dataRow[7].ToString(), true),
-                    ResponsibleUserEmail = dataRow[8].ToString(),
-                    EnableNotifications = Convert.ToBoolean(dataRow[9].ToString()),
+                    EnableNotifications = Convert.ToBoolean(dataRow[8]),
+                    EnableComments = Convert.ToBoolean(dataRow[9]),
+                    EnableFileUpload = Convert.ToBoolean(dataRow[10]),
+                    ResponsibleUserEmail = dataRow[11].ToString(),                   
                     CertificateName = certificateName
                 };
                 result = actionModel;

@@ -126,7 +126,7 @@ namespace ISOCS.Controllers
         public async Task<ActionResult> CreateAction(ActionViewModel model)
         {
             ApplicationUser loggedInUser = await _userManager.FindByNameAsync(User.Identity.Name);
-            ActionModel actionModel = new ActionModel()
+            ActionModel actionModel = new ActionModel
             {
                 StartDate = model.StartDate,
                 CreatedByEmail = loggedInUser.Email,
@@ -134,7 +134,10 @@ namespace ISOCS.Controllers
                 Description = model.Description,
                 Name = model.Title,
                 Occurence = model.Occurence,
-                ResponsibleUserEmail = model.ResponsibleUser
+                ResponsibleUserEmail = model.ResponsibleUser,
+                EnableNotifications = model.EnableNotifications,
+                EnableFileUpload = model.EnableFileUpload,
+                EnableComments = model.EnableComments
             };
             _appLogic.CreateActionInDatabase(actionModel,model.CertificateName, loggedInUser.CompanyName);
             return RedirectToAction("CertificateOverview", new { id = model.CertificateName });
@@ -233,7 +236,11 @@ namespace ISOCS.Controllers
                 Name = actionModel.Action.Name,
                 Occurence = actionModel.Action.Occurence,
                 ResponsibleUserEmail = actionModel.Action.ResponsibleUserEmail,
-                CertificateName = certificateName
+                CertificateName = certificateName,
+                EnableNotifications = actionModel.Action.EnableNotifications,
+                EnableFileUpload = actionModel.Action.EnableFileUpload,
+                EnableComments = actionModel.Action.EnableComments
+
             };
             
             return View(model);

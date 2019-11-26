@@ -47,7 +47,7 @@ namespace DAL
 
         public DataTable GetAllFromAction(int actionid)
         {
-            string query = "SELECT action.*, usertoaction.userName, usertoaction.enableNotifications FROM `action` INNER JOIN usertoaction on usertoaction.actionID = action.ID WHERE action.ID = @p1";
+            string query = "SELECT action.*, usertoaction.userName FROM `action` INNER JOIN usertoaction on usertoaction.actionID = action.ID WHERE action.ID = @p1";
             List<MySqlParameter> parameters = new List<MySqlParameter> { new MySqlParameter("@p1", actionid) };
             return _databaseCalls.Select(query, parameters);
         }
@@ -71,7 +71,7 @@ namespace DAL
         {
             int? certificateId = GetCertificateId(certificateName, companyName);
 
-            string queryAction = "INSERT INTO `action` (`name`, `description`, `startOn`, `createdOn`, `createdBy`, `certificateID`, `Occurence`) VALUES (@p1, @p2, @p3, @p4, @p5, @p6, @p7);";
+            string queryAction = "INSERT INTO `action`(`name`, `description`, `startOn`, `createdOn`, `createdBy`, `certificateID`, `Occurence`, `enableNotifications`, `enableComments`, `enableFileUpload`) VALUES (@p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9, @p10);";
             List<MySqlParameter> parametersAction = new List<MySqlParameter>
             {
                 new MySqlParameter("@p1", action.Name),
@@ -81,15 +81,17 @@ namespace DAL
                 new MySqlParameter("@p5", action.CreatedByEmail),
                 new MySqlParameter("@p6", certificateId),
                 new MySqlParameter("@p7", action.Occurence.ToString()),
+                new MySqlParameter("@p8", action.EnableNotifications),
+                new MySqlParameter("@p9", action.EnableComments),
+                new MySqlParameter("@p10", action.EnableFileUpload)
             };
             int? actionId = _databaseCalls.CommandWithLastId(queryAction, parametersAction);
 
-            string query = "INSERT INTO `usertoaction` (`userName`, `actionID`, `enableNotifications`) VALUES (@pUID, @pCerfID, @pEnableNotifications);";
+            string query = "INSERT INTO `usertoaction` (`userName`, `actionID`) VALUES (@pUID, @pCerfID);";
             List<MySqlParameter> parameters = new List<MySqlParameter>
             {
                 new MySqlParameter("@pUID", action.ResponsibleUserEmail),
-                new MySqlParameter("@pCerfID", actionId),
-                new MySqlParameter("@PEnableNotifications", action.EnableNotifications),
+                new MySqlParameter("@pCerfID", actionId)
             };
             _databaseCalls.Command(query, parameters);
 

@@ -16,6 +16,9 @@ namespace ISOCS.Models.AppViewModel
         public string CreatedByEmail { get; set; }
         public DateTime CreatedOn { get; set; }
         public OccurenceEnum Occurence { get; set; }
+        public bool EnableComments { get; set; }
+        public bool EnableFileUpload { get; set; }
+        public bool EnableNotifications { get; set; }
         public string CertificateName { get; set; }
     }
 }

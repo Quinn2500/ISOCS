@@ -61,19 +61,22 @@ namespace ISOCS.Controllers
             foreach (int id in _notificationLogic.CheckTodayNotifications())
             {
                 ActionToComplete action = _notificationLogic.GetAction(id);
-                ApplicationUser user = await _userManager.FindByEmailAsync(action.Action.ResponsibleUserEmail);
-                ExecuteTaskMailViewModel viewModel = new ExecuteTaskMailViewModel
+                if (action.Action.EnableNotifications)
                 {
-                    ActionId = id,
-                    CertificateName = action.Action.CertificateName,
-                    Description = action.Action.Description,
-                    FirstName = user.Firstname,
-                    Name = action.Action.Name,
-                    Token = _notificationLogic.GetToken(id),
-                    UserEmail = action.Action.ResponsibleUserEmail
-                };
-                string result = await _viewRenderService.RenderToStringAsync("Notification/ExecuteEmail", viewModel);
-                _emailLogic.SendEmail("ISOCS Handeling", result, "quinnvv2000@gmail.com");
+                    ApplicationUser user = await _userManager.FindByEmailAsync(action.Action.ResponsibleUserEmail);
+                    ExecuteTaskMailViewModel viewModel = new ExecuteTaskMailViewModel
+                    {
+                        ActionId = id,
+                        CertificateName = action.Action.CertificateName,
+                        Description = action.Action.Description,
+                        FirstName = user.Firstname,
+                        Name = action.Action.Name,
+                        Token = _notificationLogic.GetToken(id),
+                        UserEmail = action.Action.ResponsibleUserEmail
+                    };
+                    string result = await _viewRenderService.RenderToStringAsync("Notification/ExecuteEmail", viewModel);
+                    _emailLogic.SendEmail("ISOCS Handeling", result, "quinnvv2000@gmail.com");
+                }               
             }
         }
 
@@ -82,17 +85,20 @@ namespace ISOCS.Controllers
             foreach (int id in _notificationLogic.Check3DayNotifications())
             {
                 ActionToComplete action = _notificationLogic.GetAction(id);
-                ApplicationUser user = await _userManager.FindByEmailAsync(action.Action.ResponsibleUserEmail);
-                ThreeDayNotificationViewModel viewModel = new ThreeDayNotificationViewModel
+                if (action.Action.EnableNotifications)
                 {
-                    CertificateName = action.Action.CertificateName,
-                    FirstName = user.Firstname,
-                    DateToExecute = action.DateToExecute,
-                    ActionName = action.Action.Name,
-                    Description = action.Action.Description
-                };
-                string result = await _viewRenderService.RenderToStringAsync("Notification/ThreeDayNotification", viewModel);
-                _emailLogic.SendEmail("ISOCS Handeling", result, "quinnvv2000@gmail.com");
+                    ApplicationUser user = await _userManager.FindByEmailAsync(action.Action.ResponsibleUserEmail);
+                    ThreeDayNotificationViewModel viewModel = new ThreeDayNotificationViewModel
+                    {
+                        CertificateName = action.Action.CertificateName,
+                        FirstName = user.Firstname,
+                        DateToExecute = action.DateToExecute,
+                        ActionName = action.Action.Name,
+                        Description = action.Action.Description
+                    };
+                    string result = await _viewRenderService.RenderToStringAsync("Notification/ThreeDayNotification", viewModel);
+                    _emailLogic.SendEmail("ISOCS Handeling", result, "quinnvv2000@gmail.com");
+                }
             }
         }
 

@@ -14,6 +14,8 @@ namespace DataModels
         public DateTime CreatedOn { get; set; }
         public OccurenceEnum Occurence { get; set; }
         public bool EnableNotifications { get; set; }
+        public bool EnableComments { get; set; }
+        public bool EnableFileUpload { get; set; }
         public string CertificateName { get; set; }
     }
 }
